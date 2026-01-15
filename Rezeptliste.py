@@ -105,6 +105,9 @@ def rezept_einfuegen(Gerichte):
         Gerichte.append(neues_rezept)
         einfuegen = False
 
+def rezept_loeschen(Gerichte):
+    loeschen = True
+    
         
 
 
