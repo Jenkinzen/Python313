@@ -80,7 +80,7 @@ Gerichte = [Rezepte("Gebratene Enokis",
  
 def rezept_einfuegen(Gerichte):
     einfuegen = True
-    while einfuegen is True:
+    while einfuegen:
         Rezeptname = input("Wie heißt das Rezept?")
         Rezeptzutaten = input("Welche Zutaten brauch es?( Zutaten bitte mit , trennen)")
         Zutatenliste = []
@@ -103,11 +103,34 @@ def rezept_einfuegen(Gerichte):
         print("noice")
         neues_rezept = Rezepte(Rezeptname,Zutatenliste,Rezeptzubereitung,Rezeptnotizen,Rezeptgang.title())
         Gerichte.append(neues_rezept)
-        einfuegen = False
+        break
 
 def rezept_loeschen(Gerichte):
     loeschen = True
-    aaa
+    zu_loeschen = None
+    while loeschen:
+        print([v.Name for v in Gerichte])
+        Rezept_das_geloescht_werden_soll = input("Welches Rezept soll gelöscht werden?")
+        if Rezept_das_geloescht_werden_soll.strip().lower() in [v.Name.strip().lower() for v in Gerichte]:
+            for v in Gerichte:
+                if v.Name.strip().lower() == Rezept_das_geloescht_werden_soll:
+                    zu_loeschen = v
+            rueckversichern = input(f"Sind sie sicher, dass {Rezept_das_geloescht_werden_soll} gelöscht werden soll? Ja/Nein")
+            if rueckversichern.strip().lower() == "ja":
+                Gerichte.remove(zu_loeschen)
+                break
+            elif rueckversichern.strip().lower() == "nein":
+                anderesloeschen = input("Möchten sie ein anderes Gericht löschen?")
+                if anderesloeschen.strip().lower() == "ja":
+                    continue
+                elif anderesloeschen.strip().lower() == "nein":
+                    loeschen = False
+                    break
+            
+        else:    
+            print("Eingabe ungültig")
+            continue
+
     
         
 
@@ -156,32 +179,34 @@ while neustart:
     Menueauswahl = input("Möchten sie ein Rezept [einfügen], [ansehen] oder [löschen]?")
     if Menueauswahl == "einfügen":
         rezept_einfuegen(Gerichte)
+        continue
     elif Menueauswahl == "ansehen":
-        pass
+        break
     elif Menueauswahl == "löschen":
-        pass
+        rezept_loeschen(Gerichte)
+        continue
     else:
         print("Diese Auswahl ist ungültig!")
         continue
 
-    while True:
+while True:
 
-            wahl = input("Möchten sie Vorspeise, Hauptspeise oder ein Dessert zubereiten?")
-            #if wahl in ["Vorspeise","Hauptspeise","Dessert"]:                  # Funktioniert auch, aber die List Comprehension funktion ist 1. sowieso wichtig zu lernen und 2. Können weitere Gangarten hinzugefügt werden und müssen dann nicht manuell hier in dieser Liste dazu getan werden.
-            #if wahl in [x.Gang for x in Gerichte]:                             # saubere Lösung, aber noch besser wenn durch wahl.strip().lower() die eingabe automatisch in kleinbuchstaben verarbeitet wird, egal 
-            #if wahl.strip().lower() in [x.Gang for x in Gerichte]:             # Leider müssen auch die Gerichte klein geschrieben sein, deshalb würde das hier nicht funktionieren weil input > Dessert , wird zu dessert gemacht, da aber dessert != Dessert ist würde die Gangart nicht gefunden werden
-            if wahl.strip().lower() in [x.Gang.lower() for x in Gerichte]:      # durch x.Gang.lower() wird nun auch die Gangart in kleinbuchstaben umformatiert, dann ist input > dessert == dessert und es klappt
-                break
-            else:
-                print("Auswahl ist ungültig.")
-                continue
+        wahl = input("Möchten sie Vorspeise, Hauptspeise oder ein Dessert zubereiten?")
+        #if wahl in ["Vorspeise","Hauptspeise","Dessert"]:                  # Funktioniert auch, aber die List Comprehension funktion ist 1. sowieso wichtig zu lernen und 2. Können weitere Gangarten hinzugefügt werden und müssen dann nicht manuell hier in dieser Liste dazu getan werden.
+        #if wahl in [x.Gang for x in Gerichte]:                             # saubere Lösung, aber noch besser wenn durch wahl.strip().lower() die eingabe automatisch in kleinbuchstaben verarbeitet wird, egal 
+        #if wahl.strip().lower() in [x.Gang for x in Gerichte]:             # Leider müssen auch die Gerichte klein geschrieben sein, deshalb würde das hier nicht funktionieren weil input > Dessert , wird zu dessert gemacht, da aber dessert != Dessert ist würde die Gangart nicht gefunden werden
+        if wahl.strip().lower() in [x.Gang.lower() for x in Gerichte]:      # durch x.Gang.lower() wird nun auch die Gangart in kleinbuchstaben umformatiert, dann ist input > dessert == dessert und es klappt
+            break
+        else:
+            print("Auswahl ist ungültig.")
+            continue
 
-    passende = (zeige_rezeptliste_nach_gang(Gerichte, wahl.strip().lower()))
-    gewaehltes_rezept = rezept_auswaehlen(passende)
+passende = (zeige_rezeptliste_nach_gang(Gerichte, wahl.strip().lower()))
+gewaehltes_rezept = rezept_auswaehlen(passende)
 
-    gewaehltes_rezept.anzeigen()
+gewaehltes_rezept.anzeigen()
 
-
+while True:
     auswahl_wiederholen = input("Möchten sie ein anderes Gericht angezeigt bekommen?")
     if auswahl_wiederholen.strip().lower() == "ja":                                     # man könnte durch das modul "fuzzywuzzy" ein "fuzzy-matching" erstellen damit typos wie "jaa" oder "jarer" oder so trotzdem als valide eingabe gilt
         continue                                                                        # das wäre aber einfach absolut sinnlos, selbst im kontext der barrierefreiheit wären dann ja und nein Buttons sinnstiftender
