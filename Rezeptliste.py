@@ -107,6 +107,7 @@ def rezept_einfuegen(Gerichte):
 
 def rezept_loeschen(Gerichte):
     loeschen = True
+    aaa
     
         
 
