@@ -79,22 +79,32 @@ Gerichte = [Rezepte("Gebratene Enokis",
                     "Dessert")]
  
 def rezept_einfuegen(Gerichte):
-    while True:
+    einfuegen = True
+    while einfuegen is True:
         Rezeptname = input("Wie heißt das Rezept?")
-        Zutaten = input("Welche Zutaten brauch es?( Zutaten bitte mit , trennen)")
+        Rezeptzutaten = input("Welche Zutaten brauch es?( Zutaten bitte mit , trennen)")
         Zutatenliste = []
-        Zutatenliste = Zutaten.split(",")                                       #Trennt input bei jedem Komma um jede Zutat als einzelnes Ding in der Liste zu haben
+        Zutatenliste = Rezeptzutaten.split(",")                                       #Trennt input bei jedem Komma um jede Zutat als einzelnes Ding in der Liste zu haben
         Zutatenliste = [z.strip() for z in Zutatenliste]                        #löscht unnötige leerstellen -> z.strip = entfernen | z.strip() <-- in () kommt das was man entfernen möchte, () leer entfernt leerstellen
-        Zubereitung = input("Wie wird es zubereitet?")                          #strip löscht nur was in () steht vor und nach dem string, also würde z.strip(a) for z in Zutatenliste "Apfel" immernoch zu "Apfel" machen aber "a   Apfel " würde zu "Apfel" werden 
-        Notizen = input("Gibt es weitere Notizen zu dem Gericht?")
-        while True:
-            Gang = input("Ist es Vorspeise, Hauptspeise oder Dessert?")
-            while True:
-                if Gang in [x.Gang.strip().lower() for x in Gerichte]:
-                    continue
+        Rezeptzubereitung = input("Wie wird es zubereitet?")                          #strip löscht nur was in () steht vor und nach dem string, also würde z.strip(a) for z in Zutatenliste "Apfel" immernoch zu "Apfel" machen aber "a   Apfel " würde zu "Apfel" werden 
+        Rezeptnotizen = input("Gibt es weitere Notizen zu dem Gericht?")
+        Gangeingabe = True                                                      # Variable für Schleife
+        Rezeptgang = ""                                                         # Da neues_rezept nicht in den Loop von while Gangeingabe reinschauen kann, weiß neues_rezept nicht das Rezeptgang auf jeden Fall ein valider, deklarierter String sein wird , daher muss man sie vor dem loop deklarieren.
+        Rezeptauswahlloop = True                                                # Variable für Schleife
+        while Gangeingabe:
+            Rezeptgang = input("Ist es Vorspeise, Hauptspeise oder Dessert?")
+            while Rezeptauswahlloop:
+                if Rezeptgang in [x.Gang.strip().lower() for x in Gerichte]:
+                    Gangeingabe = False      
+                    Rezeptauswahlloop = False            
                 else:
                     print("ungültige Auswahl!")
                     break
+        print("noice")
+        neues_rezept = Rezepte(Rezeptname,Zutatenliste,Rezeptzubereitung,Rezeptnotizen,Rezeptgang.title())
+        Gerichte.append(neues_rezept)
+        einfuegen = False
+
         
 
 
