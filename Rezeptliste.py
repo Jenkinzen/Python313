@@ -132,7 +132,7 @@ def rezept_loeschen(Gerichte):
             continue
 
     
-        
+#        
 
 
 def zeige_rezeptliste(Gerichte):
