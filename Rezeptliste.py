@@ -78,61 +78,36 @@ Gerichte = [Rezepte("Gebratene Enokis",
                     "Keine",
                     "Dessert")]
  
-def rezept_einfuegen(Gerichte):
-    einfuegen = True
-    while einfuegen:
-        Rezeptname = input("Wie heißt das Rezept?")
-        Rezeptzutaten = input("Welche Zutaten brauch es?( Zutaten bitte mit , trennen)")
-        Zutatenliste = []
-        Zutatenliste = Rezeptzutaten.split(",")                                       #Trennt input bei jedem Komma um jede Zutat als einzelnes Ding in der Liste zu haben
-        Zutatenliste = [z.strip() for z in Zutatenliste]                        #löscht unnötige leerstellen -> z.strip = entfernen | z.strip() <-- in () kommt das was man entfernen möchte, () leer entfernt leerstellen
-        Rezeptzubereitung = input("Wie wird es zubereitet?")                          #strip löscht nur was in () steht vor und nach dem string, also würde z.strip(a) for z in Zutatenliste "Apfel" immernoch zu "Apfel" machen aber "a   Apfel " würde zu "Apfel" werden 
-        Rezeptnotizen = input("Gibt es weitere Notizen zu dem Gericht?")
-        Gangeingabe = True                                                      # Variable für Schleife
-        Rezeptgang = ""                                                         # Da neues_rezept nicht in den Loop von while Gangeingabe reinschauen kann, weiß neues_rezept nicht das Rezeptgang auf jeden Fall ein valider, deklarierter String sein wird , daher muss man sie vor dem loop deklarieren.
-        Rezeptauswahlloop = True                                                # Variable für Schleife
-        while Gangeingabe:
-            Rezeptgang = input("Ist es Vorspeise, Hauptspeise oder Dessert?")
-            while Rezeptauswahlloop:
-                if Rezeptgang in [x.Gang.strip().lower() for x in Gerichte]:
-                    Gangeingabe = False      
-                    Rezeptauswahlloop = False            
-                else:
-                    print("ungültige Auswahl!")
-                    break
-        print("noice")
-        neues_rezept = Rezepte(Rezeptname,Zutatenliste,Rezeptzubereitung,Rezeptnotizen,Rezeptgang.title())
-        Gerichte.append(neues_rezept)
-        break
+def rezept_einfuegen(Rezeptname,Rezeptzutaten,Rezeptzubereitung,Rezeptgang,Rezeptnotizen = " "):
 
-def rezept_loeschen(Gerichte):
-    loeschen = True
-    zu_loeschen = None
-    while loeschen:
-        print([v.Name for v in Gerichte])
-        Rezept_das_geloescht_werden_soll = input("Welches Rezept soll gelöscht werden?")
-        if Rezept_das_geloescht_werden_soll.strip().lower() in [v.Name.strip().lower() for v in Gerichte]:
-            for v in Gerichte:
-                if v.Name.strip().lower() == Rezept_das_geloescht_werden_soll:
-                    zu_loeschen = v
-            rueckversichern = input(f"Sind sie sicher, dass {Rezept_das_geloescht_werden_soll} gelöscht werden soll? Ja/Nein")
-            if rueckversichern.strip().lower() == "ja":
-                Gerichte.remove(zu_loeschen)
-                break
-            elif rueckversichern.strip().lower() == "nein":
-                anderesloeschen = input("Möchten sie ein anderes Gericht löschen?")
-                if anderesloeschen.strip().lower() == "ja":
-                    continue
-                elif anderesloeschen.strip().lower() == "nein":
-                    loeschen = False
-                    break
-            
-        else:    
-            print("Eingabe ungültig")
-            continue
+    Zutatenliste = [z.strip() for z in Rezeptzutaten.split(",")]
 
     
-#        
+    # Neues Rezept machen
+    neues_rezept = Rezepte(
+        Name=Rezeptname,
+        Zutaten=Zutatenliste,
+        Zubereitung=Rezeptzubereitung,
+        Notizen=Rezeptnotizen,
+        Gang=Rezeptgang.title()
+    )
+
+    
+    return neues_rezept
+
+
+def rezept_loeschen(Gerichte,rezeptname):
+
+    for rezept in Gerichte:
+        if rezept.Name.strip().lower() == rezeptname.strip().lower():
+            return rezept
+
+    return None 
+            
+            
+
+    
+        
 
 
 def zeige_rezeptliste(Gerichte):
@@ -168,25 +143,48 @@ def rezept_auswaehlen(passende_rezepte):
             print("Bitte eine Zahl eingeben.")
 
                 
-
-
-           
-
-    
+   
 #Kann nicht oben zu den anderen Funktionen da dort "Gerichte" noch nicht deklariert ist.
 neustart = True
 while neustart:
+
     Menueauswahl = input("Möchten sie ein Rezept [einfügen], [ansehen] oder [löschen]?")
+
     if Menueauswahl == "einfügen":
-        rezept_einfuegen(Gerichte)
+
+        Rezeptname = input("Wie heißt das Rezept?")
+        Rezeptzutaten = input("Welche Zutaten brauch es?( Zutaten bitte mit , trennen)")
+        Rezeptzubereitung = input("Wie wird es zubereitet?")       
+        gueltige_gaenge = ["vorspeise", "hauptspeise", "dessert"]
+        Rezeptgang = None
+        while Rezeptgang is None:
+            eingabe = input("Ist es Vorspeise, Hauptspeise oder Dessert? ").strip().lower()
+            if eingabe in gueltige_gaenge:
+                Rezeptgang = eingabe
+            else:
+                print("Ungültige Auswahl! Bitte erneut eingeben.")                    
+        neues_rezept = rezept_einfuegen(Rezeptname,Rezeptzutaten,Rezeptzubereitung,Rezeptgang,Rezeptnotizen = " ")
+        Gerichte.append(neues_rezept)
+        print("Rezept wurde eingefügt!")
         continue
+
     elif Menueauswahl == "ansehen":
         break
+
     elif Menueauswahl == "löschen":
-        rezept_loeschen(Gerichte)
-        continue
-    else:
-        print("Diese Auswahl ist ungültig!")
+        print([v.Name for v in Gerichte])
+        rezeptname = input("Welches Rezept soll gelöscht werden?")
+        rezept_zum_loeschen = rezept_loeschen(Gerichte, rezeptname)
+        if rezept_zum_loeschen is None:
+            print("Rezept nicht gefunden.")
+            continue
+        rueckversichern = input(f"Sind sie sicher, dass {rezept_zum_loeschen.Name} gelöscht werden soll? Ja/Nein").strip().lower()
+        if rueckversichern.strip().lower() == "ja":
+                Gerichte.remove(rezept_zum_loeschen)
+                print("Rezept wurde gelöscht!")
+        else:
+            print("Das Rezept wird nicht gelöscht.")
+            
         continue
 
 while True:
