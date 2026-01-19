@@ -95,7 +95,6 @@ def rezept_einfuegen(Rezeptname,Rezeptzutaten,Rezeptzubereitung,Rezeptgang,Rezep
     
     return neues_rezept
 
-
 def rezept_loeschen(Gerichte,rezeptname):
 
     for rezept in Gerichte:
@@ -104,21 +103,16 @@ def rezept_loeschen(Gerichte,rezeptname):
 
     return None 
             
-            
-
-    
-        
-
-
-def zeige_rezeptliste(Gerichte):
+"""def zeige_rezeptliste(Gerichte):
     for i, rezept in enumerate(Gerichte, start=1):      # start=1 damit die aufzählung nicht bei 0 beginnt
         print(f"{i}. {rezept.Name}")                    # enumerate python befehl zum durchnummerieren
                                                         # i ist ein random platzhalter, kann auch "schnörkeljörg" oder "klababnschnab" genannt werden
                                                         # rezept ist eine Variable die in dieser Definition erstellt wird
                                                         # hätte auch x, banane oder asdfsdfkg heißen können , ein temporärer Name für ein Objekt aus der Liste ( hier der Rezeptname)
                                                         # i = platzhalter für die Nummerierung der angezeigten rezepte(an wievielter Stelle steht das Rezept?) | rezept = welches Rezept?  i = 1. | rezept = Tofu Schokomousse
+"""
 
-def zeige_rezeptliste_nach_gang(Gerichte, gangwahl):
+"""def zeige_rezeptliste_nach_gang(Gerichte, gangwahl):
     # Filtere die Liste nach der gewählten Kategorie
     passende_rezepte = [r for r in Gerichte if r.Gang.strip().lower() == gangwahl]          # r ist eine temporäre Variable in die dann die Gerichte die gang == gangwahl haben
                                                                             # einsortiert werden. Hier schreibt man sich quasi die Gerichte die zur Auswahl passen
@@ -126,23 +120,32 @@ def zeige_rezeptliste_nach_gang(Gerichte, gangwahl):
     for i, rezept in enumerate(passende_rezepte, start=1):                  # die nur die gesuchten Gerichte beinhaltet. | "(r) for r in Gerichte" = gehe über alle Elemente in Gerichte (und pack sie in r).
         print(f"{i}. {rezept.Name}")
     
-    return passende_rezepte  # zurückgeben, damit man ein Rezept auswählen kann
+    return passende_rezepte  # zurückgeben, damit man ein Rezept auswählen kann"""
+
+def filter_rezepte_nach_gang(gerichte, gang):
+    return [
+        rezept for rezept in gerichte
+        if rezept.Gang.strip().lower() == gang.strip().lower()
+    ]
+
+def zeige_rezeptliste(rezepte):
+    for i, rezept in enumerate(rezepte, start=1):
+        print(f"{i}. {rezept.Name}")
 
 def rezept_auswaehlen(passende_rezepte):                                                        
-    while True:
-        try:
-            auswahl = int(input("Welches Rezept möchten Sie auswählen? (Nummer): "))
+    try:
+        auswahl = int(input("Welches Rezept möchten Sie auswählen? (Nummer): "))
 
-            if 1 <= auswahl <= len(passende_rezepte):           # len gibt die Anzahl von Sachen an (buchstaben in wörtern oder einzelne Positionen in Listen ( wie hier bei Gerichte))
-                return passende_rezepte[auswahl - 1]            # also wenn auswahl größer gleich 1 und kleiner gleich maximale anzahl an gerichten ist sagt zeile 63 aus, dass es dann valide ist.
+        if 1 <= auswahl <= len(passende_rezepte):           # len gibt die Anzahl von Sachen an (buchstaben in wörtern oder einzelne Positionen in Listen ( wie hier bei Gerichte))
+            return passende_rezepte[auswahl - 1]            # also wenn auswahl größer gleich 1 und kleiner gleich maximale anzahl an gerichten ist sagt zeile 63 aus, dass es dann valide ist.
 
-            else:
-                print("Bitte eine gültige Nummer eingeben.")
+        else:
+            print("Bitte eine gültige Nummer eingeben.")
 
-        except ValueError:
-            print("Bitte eine Zahl eingeben.")
+    except ValueError:
+        print("Bitte eine Zahl eingeben.")
 
-                
+
    
 #Kann nicht oben zu den anderen Funktionen da dort "Gerichte" noch nicht deklariert ist.
 neustart = True
@@ -169,7 +172,18 @@ while neustart:
         continue
 
     elif Menueauswahl == "ansehen":
-        break
+
+        wahl = input("Möchten sie Vorspeise, Hauptspeise oder ein Dessert zubereiten?")
+        #if wahl in ["Vorspeise","Hauptspeise","Dessert"]:                  # Funktioniert auch, aber die List Comprehension funktion ist 1. sowieso wichtig zu lernen und 2. Können weitere Gangarten hinzugefügt werden und müssen dann nicht manuell hier in dieser Liste dazu getan werden.
+        #if wahl in [x.Gang for x in Gerichte]:                             # saubere Lösung, aber noch besser wenn durch wahl.strip().lower() die eingabe automatisch in kleinbuchstaben verarbeitet wird, egal 
+        #if wahl.strip().lower() in [x.Gang for x in Gerichte]:             # Leider müssen auch die Gerichte klein geschrieben sein, deshalb würde das hier nicht funktionieren weil input > Dessert , wird zu dessert gemacht, da aber dessert != Dessert ist würde die Gangart nicht gefunden werden
+        if wahl.strip().lower() in [x.Gang.lower() for x in Gerichte]:      # durch x.Gang.lower() wird nun auch die Gangart in kleinbuchstaben umformatiert, dann ist input > dessert == dessert und es klappt
+            passende_rezepte = (filter_rezepte_nach_gang(Gerichte, wahl.strip().lower()))
+            zeige_rezeptliste(passende_rezepte)
+            continue
+        else:
+            print("Auswahl ist ungültig.")
+            continue
 
     elif Menueauswahl == "löschen":
         print([v.Name for v in Gerichte])
@@ -187,28 +201,5 @@ while neustart:
             
         continue
 
-while True:
-
-        wahl = input("Möchten sie Vorspeise, Hauptspeise oder ein Dessert zubereiten?")
-        #if wahl in ["Vorspeise","Hauptspeise","Dessert"]:                  # Funktioniert auch, aber die List Comprehension funktion ist 1. sowieso wichtig zu lernen und 2. Können weitere Gangarten hinzugefügt werden und müssen dann nicht manuell hier in dieser Liste dazu getan werden.
-        #if wahl in [x.Gang for x in Gerichte]:                             # saubere Lösung, aber noch besser wenn durch wahl.strip().lower() die eingabe automatisch in kleinbuchstaben verarbeitet wird, egal 
-        #if wahl.strip().lower() in [x.Gang for x in Gerichte]:             # Leider müssen auch die Gerichte klein geschrieben sein, deshalb würde das hier nicht funktionieren weil input > Dessert , wird zu dessert gemacht, da aber dessert != Dessert ist würde die Gangart nicht gefunden werden
-        if wahl.strip().lower() in [x.Gang.lower() for x in Gerichte]:      # durch x.Gang.lower() wird nun auch die Gangart in kleinbuchstaben umformatiert, dann ist input > dessert == dessert und es klappt
-            break
-        else:
-            print("Auswahl ist ungültig.")
-            continue
-
-passende = (zeige_rezeptliste_nach_gang(Gerichte, wahl.strip().lower()))
-gewaehltes_rezept = rezept_auswaehlen(passende)
-
-gewaehltes_rezept.anzeigen()
-
-while True:
-    auswahl_wiederholen = input("Möchten sie ein anderes Gericht angezeigt bekommen?")
-    if auswahl_wiederholen.strip().lower() == "ja":                                     # man könnte durch das modul "fuzzywuzzy" ein "fuzzy-matching" erstellen damit typos wie "jaa" oder "jarer" oder so trotzdem als valide eingabe gilt
-        continue                                                                        # das wäre aber einfach absolut sinnlos, selbst im kontext der barrierefreiheit wären dann ja und nein Buttons sinnstiftender
-    elif auswahl_wiederholen.strip().lower() == "nein":
-        break
 
 
