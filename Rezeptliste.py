@@ -2,7 +2,7 @@ import random
 import textwrap
 
 
-class Rezepte():
+class Rezept():
     def __init__(self,Name,Zutaten,Zubereitung,Notizen,Gang):
         self.Name = Name
         self.Zutaten = Zutaten
@@ -34,36 +34,28 @@ class Rezepte():
             lines.extend(wrapper.wrap(value))                           # .extend = entpackt den inhalt(items) der Liste(value) und fügt sie in die leere Liste "lines"                  
                                                                         # .append = würde theoretisch das gleiche machen, aber den inhalt von value als Liste übergeben, dann gäb es quasi in der liste "lines" nochmal eine liste "value"mit den items drin.
         return lines                                                    
-
-    def __iter__(self):
+    
+    def anzeigen(self):
         output = []
         output += self.format_multiline("Gericht:",self.Name)
         output += self.format_multiline("Zutaten:",self.Zutaten)
         output += self.format_multiline("Zubereitung:",self.Zubereitung)
         output += self.format_multiline("Notizen",self.Notizen)
-        return iter(output) 
-    
-    def anzeigen(self):
-        for Zeile in self:
-            print(Zeile)                                              
-
-#Die ganzen obigen definitionen müssen unter der Parentclass stehen da sie sonst nur für die 
-#Childclass gelten unter der sie definiert werden und sind ansonsten nicht zugänglich.
-#(gibt bestimmt n Trick dafür aber den kenn ich noch nicht) -> Ja es gibt dafür einen Trick, da man in der Regel aber für Childclasses 
+        return iter(output)                                              
 
        
-Gerichte = [Rezepte("Gebratene Enokis",
+Gerichte = [Rezept("Gebratene Enokis",
                     ["Enokis","Salz","Bratöl"],
                     "Unteres Stück der Enoki abschneiden und in die mit Bratöl erhitzte" \
                     "Pfanne geben. Die Enoki anbraten bis sie knusprig und hellbraun sind.",
                     "Keine",
                     "Vorspeise"),
-            Rezepte("Kokoscurry mit Pilzen",
+            Rezept("Kokoscurry mit Pilzen",
                     ["200 ml Kokosmilch","Currypaste", "Pilze", "Udon Nudeln"],
                     "Alles in den Wok und dann gib ihm!",
                     "Keine",
                     "Hauptspeise"),
-            Rezepte("Sushibowl",
+            Rezept("Sushibowl",
                     ["Reis","Nori Blätter","Frischkäse","Stremellachs","Gurke","Lauchzwiebeln"],
                     "Reis kochen, währenddessen Stremellachs klein schneiden oder zupfen." \
                     "Gurken sowie Lauchzwiebeln kleinschneiden. " \
@@ -71,7 +63,7 @@ Gerichte = [Rezepte("Gebratene Enokis",
                     "Nori Blätter nutzen um die Sushibowl mit den Händen zu essen.",
                     "Keine",
                     "Hauptspeise"),
-            Rezepte("Tofu Schokomousse",
+            Rezept("Tofu Schokomousse",
                     ["Tofu" ,"Kakaopulver" ,"Agaven Dicksaft" ],
                     "Tofu pürieren und mit Agaven Dicksaft und Kakaopulver vermischen." \
                     "Danach 1-2 Stunden kalt stellen.",
@@ -84,7 +76,7 @@ def rezept_einfuegen(Rezeptname,Rezeptzutaten,Rezeptzubereitung,Rezeptgang,Rezep
 
     
     # Neues Rezept machen
-    neues_rezept = Rezepte(
+    neues_rezept = Rezept(
         Name=Rezeptname,
         Zutaten=Zutatenliste,
         Zubereitung=Rezeptzubereitung,
@@ -132,7 +124,7 @@ def zeige_rezeptliste(rezepte):
     for i, rezept in enumerate(rezepte, start=1):
         print(f"{i}. {rezept.Name}")
 
-def rezept_auswaehlen(passende_rezepte):                                                        
+"""def rezept_auswaehlen(passende_rezepte):                                                        
     try:
         auswahl = int(input("Welches Rezept möchten Sie auswählen? (Nummer): "))
 
@@ -143,10 +135,21 @@ def rezept_auswaehlen(passende_rezepte):
             print("Bitte eine gültige Nummer eingeben.")
 
     except ValueError:
-        print("Bitte eine Zahl eingeben.")
+        print("Bitte eine Zahl eingeben.")"""
+
+def gang_validieren(gerichte, gang):
+    gang = gang.strip().lower()
+    return any(
+        rezept.gang.strip().lower() == gang
+        for rezept in gerichte
+    )
+
+def rezept_nach_index(rezepte, index):
+    if 1 <= index <= len(rezepte):
+        return rezepte[index - 1]
+    return None
 
 
-   
 #Kann nicht oben zu den anderen Funktionen da dort "Gerichte" noch nicht deklariert ist.
 neustart = True
 while neustart:
@@ -172,18 +175,37 @@ while neustart:
         continue
 
     elif Menueauswahl == "ansehen":
+        while True:
+            wahl = input("Möchten sie Vorspeise, Hauptspeise oder ein Dessert zubereiten?")
+            
+            if not gang_validieren(Gerichte,wahl):
+                print("Ungültige Auswahl.")
+                continue
 
-        wahl = input("Möchten sie Vorspeise, Hauptspeise oder ein Dessert zubereiten?")
-        #if wahl in ["Vorspeise","Hauptspeise","Dessert"]:                  # Funktioniert auch, aber die List Comprehension funktion ist 1. sowieso wichtig zu lernen und 2. Können weitere Gangarten hinzugefügt werden und müssen dann nicht manuell hier in dieser Liste dazu getan werden.
-        #if wahl in [x.Gang for x in Gerichte]:                             # saubere Lösung, aber noch besser wenn durch wahl.strip().lower() die eingabe automatisch in kleinbuchstaben verarbeitet wird, egal 
-        #if wahl.strip().lower() in [x.Gang for x in Gerichte]:             # Leider müssen auch die Gerichte klein geschrieben sein, deshalb würde das hier nicht funktionieren weil input > Dessert , wird zu dessert gemacht, da aber dessert != Dessert ist würde die Gangart nicht gefunden werden
-        if wahl.strip().lower() in [x.Gang.lower() for x in Gerichte]:      # durch x.Gang.lower() wird nun auch die Gangart in kleinbuchstaben umformatiert, dann ist input > dessert == dessert und es klappt
-            passende_rezepte = (filter_rezepte_nach_gang(Gerichte, wahl.strip().lower()))
-            zeige_rezeptliste(passende_rezepte)
-            continue
-        else:
-            print("Auswahl ist ungültig.")
-            continue
+            passende_rezepte = filter_rezepte_nach_gang(Gerichte,wahl)
+            break
+
+        for i, rezept in enumerate(passende_rezepte, start=1):
+            print(f"{i}. {rezept.Name}")
+
+        try:
+            auswahl = int(input("Nummer wählen:"))
+            rezept = rezept_nach_index(passende_rezepte, auswahl)
+            
+            
+
+            if rezept is None:
+                print("Ungültige Nummer.")
+                continue
+            
+            rezept.anzeigen()
+            
+            break
+
+        except ValueError:
+            print("Bitte eine Zahl eingeben.")
+
+        
 
     elif Menueauswahl == "löschen":
         print([v.Name for v in Gerichte])
