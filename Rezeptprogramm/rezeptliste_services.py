@@ -77,6 +77,11 @@ def filter_rezepte_nach_gang(gerichte, gang):
         if rezept.Gang.strip().lower() == gang.strip().lower()
     ]
 
+def geb_rezepte_nach_gang(gang: str):
+    gang = gang.strip().lower()
+    return [rezept for rezept in model.Gerichte if rezept.Gang.strip().lower() == gang]
+
+
 def zeige_rezeptliste(rezepte):
     for i, rezept in enumerate(rezepte, start=1):
         print(f"{i}. {rezept.Name}")

@@ -31,7 +31,7 @@ while neustart:
                 print("Ungültige Auswahl.")
                 continue
 
-            passende_rezepte = service.filter_rezepte_nach_gang(model.Gerichte,wahl)
+            passende_rezepte = service.geb_rezepte_nach_gang(wahl)
             break 
 
 
