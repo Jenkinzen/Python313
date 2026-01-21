@@ -63,7 +63,7 @@ def rezept_einfuegen(Rezeptname,Rezeptzutaten,Rezeptzubereitung,Rezeptgang,Rezep
 def rezept_hinzufuegen(rezept):
     model.Gerichte.append(rezept)
 
-def rezept_loeschen(Gerichte,rezeptname):
+def rezept_finden(Gerichte,rezeptname):
 
     for rezept in Gerichte:
         if rezept.Name.strip().lower() == rezeptname.strip().lower():
@@ -90,7 +90,7 @@ def zeige_rezeptliste(rezepte):
 def gang_validieren(gerichte, gang):
     gang = gang.strip().lower()
     return any(
-        rezept.gang.strip().lower() == gang
+        rezept.Gang.strip().lower() == gang
         for rezept in gerichte
     )
 
@@ -99,5 +99,5 @@ def rezept_nach_index(rezepte, index):
         return rezepte[index - 1]
     return None
 
-def rezept_wirklich_loeschen(gerichte,rezeptwahl):
+def rezept_loeschen(gerichte,rezeptwahl):
     gerichte.remove(rezeptwahl)

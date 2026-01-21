@@ -59,7 +59,7 @@ while neustart:
         try:
 
             rezeptname = input("Welches Rezept soll gelöscht werden?")
-            rezept_zum_loeschen = service.rezept_loeschen(model.Gerichte, rezeptname)
+            rezept_zum_loeschen = service.rezept_finden(model.Gerichte, rezeptname)
 
             if rezept_zum_loeschen is None:
                 print("Rezept nicht gefunden.")
@@ -68,7 +68,7 @@ while neustart:
             rezept_zum_loeschen.anzeigen()
             rueckversichern = input(f"Sind sie sicher, dass {rezept_zum_loeschen.Name} gelöscht werden soll? Ja/Nein").strip().lower()
             if rueckversichern.strip().lower() == "ja":
-                    service.rezept_wirklich_loeschen(model.Gerichte,rezept_zum_loeschen)
+                    service.rezept_loeschen(model.Gerichte,rezept_zum_loeschen)
                     print("Rezept wurde gelöscht!")
             else:
                 print("Das Rezept wird nicht gelöscht.")

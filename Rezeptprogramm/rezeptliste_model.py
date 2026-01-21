@@ -1,8 +1,9 @@
 import rezeptliste_services as service
 
+
 Gerichte = [service.Rezept("Gebratene Enokis",
                     ["Enokis","Salz","Bratöl"],
-                    "Unteres Stück der Enoki abschneiden und in die mit Bratöl erhitzte" \
+                    "Unteres Stück der Enoki abschneiden und in die mit Bratöl erhitzte " \
                     "Pfanne geben. Die Enoki anbraten bis sie knusprig und hellbraun sind.",
                     "Keine",
                     "Vorspeise"),
@@ -13,7 +14,7 @@ Gerichte = [service.Rezept("Gebratene Enokis",
                     "Hauptspeise"),
             service.Rezept("Sushibowl",
                     ["Reis","Nori Blätter","Frischkäse","Stremellachs","Gurke","Lauchzwiebeln"],
-                    "Reis kochen, währenddessen Stremellachs klein schneiden oder zupfen." \
+                    "Reis kochen, währenddessen Stremellachs klein schneiden oder zupfen. " \
                     "Gurken sowie Lauchzwiebeln kleinschneiden. " \
                     "Danach alles in eine Salatschüssel und mit dem gekochten Reis verrühren. " \
                     "Nori Blätter nutzen um die Sushibowl mit den Händen zu essen.",
@@ -21,7 +22,7 @@ Gerichte = [service.Rezept("Gebratene Enokis",
                     "Hauptspeise"),
             service.Rezept("Tofu Schokomousse",
                     ["Tofu" ,"Kakaopulver" ,"Agaven Dicksaft" ],
-                    "Tofu pürieren und mit Agaven Dicksaft und Kakaopulver vermischen." \
+                    "Tofu pürieren und mit Agaven Dicksaft und Kakaopulver vermischen. " \
                     "Danach 1-2 Stunden kalt stellen.",
                     "Keine",
                     "Dessert")]
