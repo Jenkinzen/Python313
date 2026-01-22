@@ -1,5 +1,5 @@
 import rezeptliste_services as service
-import rezeptliste_model as model
+import rezeptliste_storage as storage
 
 neustart = True
 while neustart:
@@ -14,7 +14,7 @@ while neustart:
         Rezeptgang = None
         while Rezeptgang is None:
             eingabe = input("Ist es Vorspeise, Hauptspeise oder Dessert? ").strip().lower()
-            if eingabe in model.gueltige_gaenge:
+            if eingabe in storage.gueltige_gaenge:
                 Rezeptgang = eingabe
             else:
                 print("Ungültige Auswahl! Bitte erneut eingeben.")                    
@@ -27,11 +27,16 @@ while neustart:
         while True:
             wahl = input("Möchten sie Vorspeise, Hauptspeise oder ein Dessert zubereiten?")
             
-            if not service.gang_validieren(model.Gerichte,wahl):
+            if not service.gang_validieren(storage.Gerichte,wahl):
                 print("Ungültige Auswahl.")
                 continue
 
             passende_rezepte = service.geb_rezepte_nach_gang(wahl)
+
+            rezeptname = service.zeige_rezeptname(passende_rezepte)
+            for variable in rezeptname:
+                print(variable)
+
             break 
 
 
@@ -44,9 +49,10 @@ while neustart:
             if rezept is None:
                 print("Ungültige Nummer.")
                 continue
-            
-            rezept.anzeigen()
-            
+                        
+            for zeile in rezept.anzeigen():
+                print(zeile)
+
             continue
 
         except ValueError:
@@ -55,11 +61,11 @@ while neustart:
         
 
     elif Menueauswahl == "löschen":
-        print([v.Name for v in model.Gerichte])
+        print([v.Name for v in storage.Gerichte])
         try:
 
             rezeptname = input("Welches Rezept soll gelöscht werden?")
-            rezept_zum_loeschen = service.rezept_finden(model.Gerichte, rezeptname)
+            rezept_zum_loeschen = service.rezept_finden(storage.Gerichte, rezeptname)
 
             if rezept_zum_loeschen is None:
                 print("Rezept nicht gefunden.")
@@ -68,7 +74,7 @@ while neustart:
             rezept_zum_loeschen.anzeigen()
             rueckversichern = input(f"Sind sie sicher, dass {rezept_zum_loeschen.Name} gelöscht werden soll? Ja/Nein").strip().lower()
             if rueckversichern.strip().lower() == "ja":
-                    service.rezept_loeschen(model.Gerichte,rezept_zum_loeschen)
+                    service.rezept_loeschen(storage.Gerichte,rezept_zum_loeschen)
                     print("Rezept wurde gelöscht!")
             else:
                 print("Das Rezept wird nicht gelöscht.")
