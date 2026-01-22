@@ -21,13 +21,15 @@ def rezept_finden(Gerichte,rezeptname):
             
 def filter_rezepte_nach_gang(gerichte, gang):
     return [
-        rezept for rezept in gerichte
-        if rezept.Gang.strip().lower() == gang.strip().lower()
+        gangwahl for gangwahl in gerichte
+        if gangwahl.Gang.strip().lower() == gang.strip().lower()
     ]
 
-def geb_rezepte_nach_gang(gang: str):
-    gang = gang.strip().lower()
-    return [rezept for rezept in Gerichte if rezept.Gang.strip().lower() == gang]
+def filter_rezepte_nach_zutaten(gerichte, zutat):
+    return[
+        zutatenwahl for zutatenwahl in gerichte
+        if any (zutat.lower() in einzelne_zutat.lower() for einzelne_zutat in zutatenwahl.Zutaten) 
+    ]
 
 def gang_validieren(gerichte, gang):
     gang = gang.strip().lower()
@@ -35,6 +37,13 @@ def gang_validieren(gerichte, gang):
         rezept.Gang.strip().lower() == gang
         for rezept in gerichte
     )
+
+def zutat_validieren(gerichte, zutat):
+    zutat = zutat.strip().lower()
+    return any(
+        (zutatliste.lower()for zutatliste in rezept.Zutaten)
+        for rezept in gerichte
+        )
 
 def rezept_nach_index(rezepte, index):
     if 1 <= index <= len(rezepte):
