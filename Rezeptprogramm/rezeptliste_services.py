@@ -11,6 +11,8 @@ def zeige_rezeptname(rezepte):
         gueltige_rezepte.append(f"{nummer}. {rezept.Name}")
     return gueltige_rezepte
 
+"""gültige rezepte = [] erstellt eine leere liste"""
+
 def rezept_finden(Gerichte,rezeptname):
 
     for rezept in Gerichte:
@@ -27,9 +29,39 @@ def filter_rezepte_nach_gang(gerichte, gang):
 
 def filter_rezepte_nach_zutaten(gerichte, zutat):
     return[
-        zutatenwahl for zutatenwahl in gerichte
-        if any (zutat.lower() in einzelne_zutat.lower() for einzelne_zutat in zutatenwahl.Zutaten) 
+        rezeptwahl for rezeptwahl in gerichte
+        if any (zutat.lower() in einzelne_zutat.lower() for einzelne_zutat in rezeptwahl.Zutaten) 
     ]
+
+"""Uff.... also durch die [] Klammern wird das ergebnis der funktion innerhalb in eine Liste 
+übernommen.
+     erstes rezeptwahl(variable) sagt welches Objekt übernommen wird.
+    das "for rezeptwahl in gerichte" sagt, das alle "rezeptwahl" Elemente die die funktion
+       in gerichte(Parametervariable)"""
+                        
+      # -[Parameter = die dinger rechts vom Funktionsnamen], 
+      # wird in der UI durch bspw "filter_rezepte_nach_zutaten(storage.Gerichte, XXXXX)
+      #  definiert. )-
+           
+"""besitzen in die liste rein kommt die durch das erste rezeptwahl entsteht-
+
+     if any = wenn es dort irgendetwas gibt ,dass: """
+
+    # zutat.lower() = der zweite Parameter , also quasi platzhhalter für den Input durch UI.
+    # hier bspw > "filter_rezepte_nach_zutaten(storage.Gerichte, zutatenwahl)
+    # wobei "zutatenwahl" die variable ist in der im UI die gesuchte Zutat gespeichert wird.
+    #(zutatenwahl = input("Nach welcher Zutat möchten sie filtern")
+
+""" Zutat(Parameter) 
+    in einzelne_zutat (wie oben rezeptwahl for rezeptwahl)
+     for einzelne_zutat in rezeptwahl.Zutaten 
+     also das einzelne Element was dem Suchkriterium aus Zutaten entspricht
+    in die liste rezeptwahl einfügen.
+      """
+    # Zusammengefasst : "Schreib mir auf die liste Rezeptwahl alle Gerichte von denen die Strings
+    #                     (einzelne_zutat) der Liste "Zutaten" irgendwie
+    #                    -gesuchtes Kriterium- in der rezeptwahl.Zutaten erfüllen "
+
 
 def gang_validieren(gerichte, gang):
     gang = gang.strip().lower()

@@ -38,7 +38,7 @@ while neustart:
             
 
             if filter_auswahl == "zutaten":
-                zutatenwahl = input("Nach welchen Zutaten möchten sie filtern?\n")
+                zutatenwahl = input("Nach welcher Zutat möchten sie filtern?\n")
 
                 passende_rezepte = service.filter_rezepte_nach_zutaten(storage.Gerichte,zutatenwahl)
                 if not passende_rezepte:
