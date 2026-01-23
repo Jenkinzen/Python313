@@ -27,8 +27,6 @@ while neustart:
 
 
 
-
-
     elif Menueauswahl == "ansehen":
         while True:
 
@@ -98,14 +96,7 @@ while neustart:
                 except ValueError:
                     print("Bitte eine Zahl eingeben.")
 
-
-
-
-
-
-
-
-        
+     
 
     elif Menueauswahl == "löschen":
         print([v.Name for v in storage.Gerichte])

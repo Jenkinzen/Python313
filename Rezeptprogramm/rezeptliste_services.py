@@ -11,7 +11,11 @@ def zeige_rezeptname(rezepte):
         gueltige_rezepte.append(f"{nummer}. {rezept.Name}")
     return gueltige_rezepte
 
-"""gültige rezepte = [] erstellt eine leere liste"""
+"""gültige rezepte = [] erstellt eine leere liste,
+    enumerate funktioniert IMMER so, dass die Nummerierung die erste variable
+     nutzt. 
+    Also wenn man "Gebratene Enoki 1" haben wollen würde, dann müsste man den output
+    in einer zweiten funktion umdrehen bzw halt dann (f"{rezept.Name}. {nummer}) appenden"""
 
 def rezept_finden(Gerichte,rezeptname):
 
@@ -20,12 +24,18 @@ def rezept_finden(Gerichte,rezeptname):
             return rezept
 
     return None 
+
+"""wenn eingegebener name in der rezeptliste zu finden ist > return das rezept. lel"""
+
             
 def filter_rezepte_nach_gang(gerichte, gang):
     return [
         gangwahl for gangwahl in gerichte
         if gangwahl.Gang.strip().lower() == gang.strip().lower()
     ]
+
+"""Siehe filter_rezepte_nach_zutaten, selbe sache nur ohne aus einer liste(gerichte)
+    eine weitere liste(wie unten die zutatenliste) aufrufen zu müssen."""
 
 def filter_rezepte_nach_zutaten(gerichte, zutat):
     return[
@@ -35,29 +45,29 @@ def filter_rezepte_nach_zutaten(gerichte, zutat):
 
 """Uff.... also durch die [] Klammern wird das ergebnis der funktion innerhalb in eine Liste 
 übernommen.
-     erstes rezeptwahl(variable) sagt welches Objekt übernommen wird.
+    erstes rezeptwahl(variable) sagt welches Objekt übernommen wird.
     das "for rezeptwahl in gerichte" sagt, das alle "rezeptwahl" Elemente die die funktion
-       in gerichte(Parametervariable)"""
+    in gerichte(Parametervariable)
                         
-      # -[Parameter = die dinger rechts vom Funktionsnamen], 
-      # wird in der UI durch bspw "filter_rezepte_nach_zutaten(storage.Gerichte, XXXXX)
-      #  definiert. )-
-           
-"""besitzen in die liste rein kommt die durch das erste rezeptwahl entsteht-
+    # -[Parameter = die dinger rechts vom Funktionsnamen], 
+    # wird in der UI durch bspw "filter_rezepte_nach_zutaten(storage.Gerichte, XXXXX)
+    #  definiert. )-
+        
+besitzen in die liste rein kommt die durch das erste rezeptwahl entsteht-
 
-     if any = wenn es dort irgendetwas gibt ,dass: """
+    if any = wenn es dort irgendetwas gibt ,dass: 
 
     # zutat.lower() = der zweite Parameter , also quasi platzhhalter für den Input durch UI.
     # hier bspw > "filter_rezepte_nach_zutaten(storage.Gerichte, zutatenwahl)
     # wobei "zutatenwahl" die variable ist in der im UI die gesuchte Zutat gespeichert wird.
     #(zutatenwahl = input("Nach welcher Zutat möchten sie filtern")
 
-""" Zutat(Parameter) 
+     Zutat(Parameter) 
     in einzelne_zutat (wie oben rezeptwahl for rezeptwahl)
-     for einzelne_zutat in rezeptwahl.Zutaten 
-     also das einzelne Element was dem Suchkriterium aus Zutaten entspricht
+    for einzelne_zutat in rezeptwahl.Zutaten 
+    also das einzelne Element was dem Suchkriterium aus Zutaten entspricht
     in die liste rezeptwahl einfügen.
-      """
+    """
     # Zusammengefasst : "Schreib mir auf die liste Rezeptwahl alle Gerichte von denen die Strings
     #                     (einzelne_zutat) der Liste "Zutaten" irgendwie
     #                    -gesuchtes Kriterium- in der rezeptwahl.Zutaten erfüllen "
@@ -70,6 +80,10 @@ def gang_validieren(gerichte, gang):
         for rezept in gerichte
     )
 
+"""wenn irgendwas (any) in rezept.Gang das beinhaltet was der input war dann gibs raus
+            any ----> auch wenn man des eingibt zeigt er dessert an weil des dadrin steckt.
+            ohne any würde er dann nichts raus geben."""
+
 def zutat_validieren(gerichte, zutat):
     zutat = zutat.strip().lower()
     return any(
@@ -77,13 +91,22 @@ def zutat_validieren(gerichte, zutat):
         for rezept in gerichte
         )
 
+"""siehe gang_validieren"""
+
 def rezept_nach_index(rezepte, index):
     if 1 <= index <= len(rezepte):
         return rezepte[index - 1]
     return None
 
+"""index = auswahl der Gerichtnummer im UI.
+    wenn die auswahl größer gleich 1 ist und kleiner als die
+    gesamtanzahl an rezepten (len(rezepte) nummeriert die einzelnen Objekte in der Liste durch
+    ,hier halt die Rezepte in der Liste Gerichte)"""
+
 def rezept_loeschen(gerichte,rezeptwahl):
     gerichte.remove(rezeptwahl)
+
+"""wenn ich das nich ohne erklärung raff kann ichs auch direkt sein lassen"""
 
 def rezept_einfuegen(Rezeptname,Rezeptzutaten,Rezeptzubereitung,Rezeptgang,Rezeptnotizen = " "):
 
@@ -101,6 +124,13 @@ def rezept_einfuegen(Rezeptname,Rezeptzutaten,Rezeptzubereitung,Rezeptgang,Rezep
 
     
     return neues_rezept
+
+""" Die Zutatenliste Line ist damit die Zutaten für die Zutatenliste als einzelne Elemente eingefügt werden
+und nicht alle Zutaten zusammen als ein langer String gelten statt eine Liste mit einzelnen Zutaten.
+
+leeres neues rezept wird generiert und mit den Daten aus der UI
+    gefüllt > neues Rezept AAAABER es ist noch nicht in der Gerichte Liste.
+    das geschieht erst durch die Funktion hier drunter > rezept wird in die Liste Gerichte appended."""
 
 def rezept_hinzufuegen(rezept):
     Gerichte.append(rezept)
