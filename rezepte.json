@@ -1,0 +1,59 @@
+[
+  {
+    "Name": "Gebratene Enokis",
+    "Zutaten": [
+      "Enokis",
+      "Salz",
+      "Brat\u00f6l"
+    ],
+    "Zubereitung": "Unteres St\u00fcck der Enoki abschneiden und in die mit Brat\u00f6l erhitzte Pfanne geben. Die Enoki anbraten bis sie knusprig und hellbraun sind.",
+    "Notizen": "Keine",
+    "Gang": "Vorspeise"
+  },
+  {
+    "Name": "Kokoscurry mit Pilzen",
+    "Zutaten": [
+      "200 ml Kokosmilch",
+      "Currypaste",
+      "Pilze",
+      "Udon Nudeln"
+    ],
+    "Zubereitung": "Alles in den Wok und dann gib ihm!",
+    "Notizen": "Keine",
+    "Gang": "Hauptspeise"
+  },
+  {
+    "Name": "Sushibowl",
+    "Zutaten": [
+      "Reis",
+      "Nori Bl\u00e4tter",
+      "Frischk\u00e4se",
+      "Stremellachs",
+      "Gurke",
+      "Lauchzwiebeln"
+    ],
+    "Zubereitung": "Reis kochen, w\u00e4hrenddessen Stremellachs klein schneiden oder zupfen. Gurken sowie Lauchzwiebeln kleinschneiden. Danach alles in eine Salatsch\u00fcssel und mit dem gekochten Reis verr\u00fchren. Nori Bl\u00e4tter nutzen um die Sushibowl mit den H\u00e4nden zu essen.",
+    "Notizen": "Keine",
+    "Gang": "Hauptspeise"
+  },
+  {
+    "Name": "Tofu Schokomousse",
+    "Zutaten": [
+      "Tofu",
+      "Kakaopulver",
+      "Agaven Dicksaft"
+    ],
+    "Zubereitung": "Tofu p\u00fcrieren und mit Agaven Dicksaft und Kakaopulver vermischen. Danach 1-2 Stunden kalt stellen.",
+    "Notizen": "Keine",
+    "Gang": "Dessert"
+  },
+  {
+    "Name": "asd",
+    "Zutaten": [
+      "asd"
+    ],
+    "Zubereitung": "asd",
+    "Notizen": " ",
+    "Gang": "Dessert"
+  }
+]

@@ -1,8 +1,20 @@
-import textwrap
-from rezeptliste_storage import Gerichte
-from rezeptliste_model import Rezept
+import rezeptliste_model as model
+import rezeptliste_storage as storage
 
+def alle_rezepte():                                               
+    return storage.Gerichte
 
+def alle_rezepte_nummeriert():                                    #ICH HABE
+    alle_gerichte = []                                            #FEUER    
+    for nummer, rezepte in enumerate(storage.Gerichte, start=1):  #GEMACHT!!!!!
+        alle_gerichte.append(f"{nummer}. {rezepte.Name}")
+    return alle_gerichte
+
+def gang_pruefen(gang):
+    return gang.lower() in storage.gueltige_gaenge
+
+def rezept_anzeigen(rezept):
+    return rezept.anzeigen(rezept)
 
 
 def zeige_rezeptname(rezepte):
@@ -10,6 +22,7 @@ def zeige_rezeptname(rezepte):
     for nummer, rezept in enumerate(rezepte, start=1):
         gueltige_rezepte.append(f"{nummer}. {rezept.Name}")
     return gueltige_rezepte
+        
 
 """gültige rezepte = [] erstellt eine leere liste,
     enumerate funktioniert IMMER so, dass die Nummerierung die erste variable
@@ -17,9 +30,9 @@ def zeige_rezeptname(rezepte):
     Also wenn man "Gebratene Enoki 1" haben wollen würde, dann müsste man den output
     in einer zweiten funktion umdrehen bzw halt dann (f"{rezept.Name}. {nummer}) appenden"""
 
-def rezept_finden(Gerichte,rezeptname):
+def rezept_finden(rezeptname):
 
-    for rezept in Gerichte:
+    for rezept in storage.Gerichte:
         if rezept.Name.strip().lower() == rezeptname.strip().lower():
             return rezept
 
@@ -28,18 +41,18 @@ def rezept_finden(Gerichte,rezeptname):
 """wenn eingegebener name in der rezeptliste zu finden ist > return das rezept. lel"""
 
             
-def filter_rezepte_nach_gang(gerichte, gang):
+def filter_rezepte_nach_gang(gang):
     return [
-        gangwahl for gangwahl in gerichte
+        gangwahl for gangwahl in storage.Gerichte
         if gangwahl.Gang.strip().lower() == gang.strip().lower()
     ]
 
 """Siehe filter_rezepte_nach_zutaten, selbe sache nur ohne aus einer liste(gerichte)
     eine weitere liste(wie unten die zutatenliste) aufrufen zu müssen."""
 
-def filter_rezepte_nach_zutaten(gerichte, zutat):
+def filter_rezepte_nach_zutaten(zutat):
     return[
-        rezeptwahl for rezeptwahl in gerichte
+        rezeptwahl for rezeptwahl in storage.Gerichte
         if any (zutat.lower() in einzelne_zutat.lower() for einzelne_zutat in rezeptwahl.Zutaten) 
     ]
 
@@ -103,10 +116,16 @@ def rezept_nach_index(rezepte, index):
     gesamtanzahl an rezepten (len(rezepte) nummeriert die einzelnen Objekte in der Liste durch
     ,hier halt die Rezepte in der Liste Gerichte)"""
 
-def rezept_loeschen(gerichte,rezeptwahl):
-    gerichte.remove(rezeptwahl)
+def rezept_loeschen(rezeptwahl):
+    storage.Gerichte.remove(rezeptwahl)
+    storage.speichere_rezepte(storage.Gerichte)
 
-"""wenn ich das nich ohne erklärung raff kann ichs auch direkt sein lassen"""
+"""speichere_rezepte speichert die überarbeitete Liste , quasi die Liste mit dem 
+    entfernten Gericht wird gespeichert"""
+
+def rezept_hinzufuegen(rezept):
+    storage.Gerichte.append(rezept)
+    storage.speichere_rezepte(storage.Gerichte) 
 
 def rezept_einfuegen(Rezeptname,Rezeptzutaten,Rezeptzubereitung,Rezeptgang,Rezeptnotizen = " "):
 
@@ -114,7 +133,7 @@ def rezept_einfuegen(Rezeptname,Rezeptzutaten,Rezeptzubereitung,Rezeptgang,Rezep
 
     
     # Neues Rezept machen
-    neues_rezept = Rezept(
+    neues_rezept = model.Rezept(
         Name=Rezeptname,
         Zutaten=Zutatenliste,
         Zubereitung=Rezeptzubereitung,
@@ -130,7 +149,4 @@ und nicht alle Zutaten zusammen als ein langer String gelten statt eine Liste mi
 
 leeres neues rezept wird generiert und mit den Daten aus der UI
     gefüllt > neues Rezept AAAABER es ist noch nicht in der Gerichte Liste.
-    das geschieht erst durch die Funktion hier drunter > rezept wird in die Liste Gerichte appended."""
-
-def rezept_hinzufuegen(rezept):
-    Gerichte.append(rezept)
+    das geschieht erst durch die Funktion rezept_hinzufuegen. Dann wird in die Liste Gerichte appended."""
