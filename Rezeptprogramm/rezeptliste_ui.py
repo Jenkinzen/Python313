@@ -6,7 +6,7 @@ neustart = True
 
 def filter_auswaehlen():
     return input("Nach welchen Kriterien soll die Rezeptauswahl gefiltert werden?\n"
-                 "[Zutaten]\noder\n[Gang]?\n").strip().lower()
+                 "[Gerichte]\n[Zutaten]\noder\n[Gang]?\n").strip().lower()
 
 def rezepte_ansehen_nach_gang():
     gang = input("Welchen Gang möchten Sie wählen?\n").strip().lower()
@@ -17,8 +17,8 @@ def rezepte_ansehen_nach_gang():
         return
 
     
-    for zeile in service.zeige_rezeptname(rezepte):
-        print(zeile)
+    for i, rezept in enumerate(rezepte, start=1):
+        print(f"{i}. {rezept.Name}")
 
     
     try:
@@ -43,8 +43,8 @@ def rezepte_ansehen_nach_zutat():
         print("Keine Rezepte gefunden.")
         return
 
-    for zeile in service.zeige_rezeptname(rezepte):
-        print(zeile)
+    for i, rezept in enumerate(rezepte, start=1):
+        print(f"{i}. {rezept.Name}")
 
     try:
         nummer = int(input("Nummer wählen:\n"))
@@ -60,6 +60,30 @@ def rezepte_ansehen_nach_zutat():
     except ValueError:
         print("Bitte eine Zahl eingeben.")   
 
+def rezepte_anzeigen_nach_gerichte():
+    for i, rezept in enumerate(service.alle_rezeptnamen(), start=1):
+        print(f"{i}. {rezept}")
+
+def rezepte_ansehen_nach_Gerichte():
+    rezepte_anzeigen_nach_gerichte()
+    
+    gerichte = service.filter_rezepte_nach_gericht("")
+    nummer = int(input("Wählen sie bitte die Nummer des Gerichtes:\n"))
+    rezepte = service.rezept_nach_index(gerichte,nummer)
+
+    if not rezepte:
+        print("Keine Rezepte gefunden.")
+        return
+
+    
+    for zeile in rezepte.anzeigen():
+        print(zeile)
+    
+    
+    
+    
+    
+
 def rezepte_ansehen():
     while True:
         filterwahl = filter_auswaehlen()
@@ -71,6 +95,11 @@ def rezepte_ansehen():
         elif filterwahl == "gang":
             rezepte_ansehen_nach_gang()
             return
+        
+        elif filterwahl == "gerichte":
+            rezepte_ansehen_nach_Gerichte()
+            return
+        
         else:
             print("Ungültige Auswahl.")
 
@@ -88,7 +117,7 @@ def rezept_einfuegen():
             print("Ungültige Auswahl! Bitte erneut eingeben.")                    
     neues_rezept = service.rezept_einfuegen(Rezeptname,Rezeptzutaten,Rezeptzubereitung,Rezeptgang,Rezeptnotizen = " ")
     service.rezept_hinzufuegen(neues_rezept)
-    print("Rezept wurde eingefügt!")
+    print(f"{neues_rezept} wurde eingefügt!")
     return
 
 def rezept_loeschen():
@@ -107,9 +136,9 @@ def rezept_loeschen():
             rueckversichern = input(f"Sind sie sicher, dass {rezept_zum_loeschen.Name} gelöscht werden soll? Ja/Nein").strip().lower()
             if rueckversichern.strip().lower() == "ja":
                     service.rezept_loeschen(rezept_zum_loeschen)
-                    print("Rezept wurde gelöscht!")
+                    print(f"{rezept_zum_loeschen} wurde gelöscht!")
             else:
-                print("Das Rezept wird nicht gelöscht.")
+                print(f"Das {rezept_zum_loeschen} wird nicht gelöscht.")
                 return
 
         except ValueError:
@@ -118,7 +147,7 @@ def rezept_loeschen():
 
 while neustart:
 
-    Menueauswahl = input("""Möchten sie das Rezept 
+    Menueauswahl = input("""Möchten sie ein Rezept 
 [ansehen]              [einfügen]              [löschen]?
 """)
 

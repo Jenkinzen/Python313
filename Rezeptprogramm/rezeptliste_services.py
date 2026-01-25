@@ -1,27 +1,16 @@
 import rezeptliste_model as model
 import rezeptliste_storage as storage
 
+def alle_rezeptnamen():
+    return[
+        rezepte.Name for rezepte in storage.Gerichte
+    ]
+  
 def alle_rezepte():                                               
     return storage.Gerichte
 
-def alle_rezepte_nummeriert():                                    #ICH HABE
-    alle_gerichte = []                                            #FEUER    
-    for nummer, rezepte in enumerate(storage.Gerichte, start=1):  #GEMACHT!!!!!
-        alle_gerichte.append(f"{nummer}. {rezepte.Name}")
-    return alle_gerichte
-
 def gang_pruefen(gang):
     return gang.lower() in storage.gueltige_gaenge
-
-def rezept_anzeigen(rezept):
-    return rezept.anzeigen(rezept)
-
-
-def zeige_rezeptname(rezepte):
-    gueltige_rezepte = []
-    for nummer, rezept in enumerate(rezepte, start=1):
-        gueltige_rezepte.append(f"{nummer}. {rezept.Name}")
-    return gueltige_rezepte
         
 
 """gültige rezepte = [] erstellt eine leere liste,
@@ -40,11 +29,22 @@ def rezept_finden(rezeptname):
 
 """wenn eingegebener name in der rezeptliste zu finden ist > return das rezept. lel"""
 
-            
+def filter_rezepte_nach_gericht(gericht):
+    gericht = gericht.strip().lower()
+    return [
+        rezept for rezept in storage.Gerichte
+        if gericht.lower().strip() in rezept.Name.strip().lower()
+    ] 
+
+"""wollte eigentlich mit "any" arbeiten, aber teiltreffer ("Bro" eingabe zeigt "Brokkoli" an)
+    werden auch durch "in" ermöglicht. any macht kein sinn weil gerichte.Name keine Liste
+     sondern ein String ist, bei Zutaten machte es Sinn weil Zutaten eine Liste ist.
+      Faustregel > Liste = any() / String = kein any() sondern in oder halt was grade passt. """
+
 def filter_rezepte_nach_gang(gang):
     return [
-        gangwahl for gangwahl in storage.Gerichte
-        if gangwahl.Gang.strip().lower() == gang.strip().lower()
+        rezept for rezept in storage.Gerichte
+        if rezept.Gang.strip().lower() == gang.strip().lower()
     ]
 
 """Siehe filter_rezepte_nach_zutaten, selbe sache nur ohne aus einer liste(gerichte)
@@ -52,8 +52,8 @@ def filter_rezepte_nach_gang(gang):
 
 def filter_rezepte_nach_zutaten(zutat):
     return[
-        rezeptwahl for rezeptwahl in storage.Gerichte
-        if any (zutat.lower() in einzelne_zutat.lower() for einzelne_zutat in rezeptwahl.Zutaten) 
+        rezept for rezept in storage.Gerichte
+        if any (zutat.lower() in einzelne_zutat.lower() for einzelne_zutat in rezept.Zutaten) 
     ]
 
 """Uff.... also durch die [] Klammern wird das ergebnis der funktion innerhalb in eine Liste 
@@ -96,15 +96,6 @@ def gang_validieren(gerichte, gang):
 """wenn irgendwas (any) in rezept.Gang das beinhaltet was der input war dann gibs raus
             any ----> auch wenn man des eingibt zeigt er dessert an weil des dadrin steckt.
             ohne any würde er dann nichts raus geben."""
-
-def zutat_validieren(gerichte, zutat):
-    zutat = zutat.strip().lower()
-    return any(
-        (zutatliste.lower()for zutatliste in rezept.Zutaten)
-        for rezept in gerichte
-        )
-
-"""siehe gang_validieren"""
 
 def rezept_nach_index(rezepte, index):
     if 1 <= index <= len(rezepte):
