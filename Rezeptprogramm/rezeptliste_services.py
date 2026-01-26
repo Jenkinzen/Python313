@@ -50,42 +50,17 @@ def filter_rezepte_nach_gang(gang):
 """Siehe filter_rezepte_nach_zutaten, selbe sache nur ohne aus einer liste(gerichte)
     eine weitere liste(wie unten die zutatenliste) aufrufen zu müssen."""
 
-def filter_rezepte_nach_zutaten(zutat):
+def filter_rezepte_nach_zutaten(zutaten):
     return[
         rezept for rezept in storage.Gerichte
-        if any (zutat.lower() in einzelne_zutat.lower() for einzelne_zutat in rezept.Zutaten) 
+        if all(any (zutat in einzelne_zutat.lower() for einzelne_zutat in rezept.Zutaten)
+               for zutat in zutaten
+        )
     ]
 
-"""Uff.... also durch die [] Klammern wird das ergebnis der funktion innerhalb in eine Liste 
-übernommen.
-    erstes rezeptwahl(variable) sagt welches Objekt übernommen wird.
-    das "for rezeptwahl in gerichte" sagt, das alle "rezeptwahl" Elemente die die funktion
-    in gerichte(Parametervariable)
-                        
-    # -[Parameter = die dinger rechts vom Funktionsnamen], 
-    # wird in der UI durch bspw "filter_rezepte_nach_zutaten(storage.Gerichte, XXXXX)
-    #  definiert. )-
-        
-besitzen in die liste rein kommt die durch das erste rezeptwahl entsteht-
-
-    if any = wenn es dort irgendetwas gibt ,dass: 
-
-    # zutat.lower() = der zweite Parameter , also quasi platzhhalter für den Input durch UI.
-    # hier bspw > "filter_rezepte_nach_zutaten(storage.Gerichte, zutatenwahl)
-    # wobei "zutatenwahl" die variable ist in der im UI die gesuchte Zutat gespeichert wird.
-    #(zutatenwahl = input("Nach welcher Zutat möchten sie filtern")
-
-     Zutat(Parameter) 
-    in einzelne_zutat (wie oben rezeptwahl for rezeptwahl)
-    for einzelne_zutat in rezeptwahl.Zutaten 
-    also das einzelne Element was dem Suchkriterium aus Zutaten entspricht
-    in die liste rezeptwahl einfügen.
-    """
-    # Zusammengefasst : "Schreib mir auf die liste Rezeptwahl alle Gerichte von denen die Strings
-    #                     (einzelne_zutat) der Liste "Zutaten" irgendwie
-    #                    -gesuchtes Kriterium- in der rezeptwahl.Zutaten erfüllen "
-
-
+""" rezept for rezept in storage.Gerichte > geh jedes rezept durch was gespeichert wurde.(s.Gerichte = rezeptsammlung / rezept for rezept = jedes Rezept einzeln durchgehen)
+    any(zutat in einzelne_zutat = gibt es die gesuchten Zutaten im Rezept? ///// for einzelne_zutat in rezept.Zutaten) = guck jede Zutat des Rezepts an.
+    all(any(bla)for zutat in zutaten) =  sind ALLE gesuchten Zutaten in diesem Rezept?"""
 def gang_validieren(gerichte, gang):
     gang = gang.strip().lower()
     return any(

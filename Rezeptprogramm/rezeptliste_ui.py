@@ -35,8 +35,8 @@ def rezepte_ansehen_nach_gang():
     except ValueError:
         print("Bitte eine Zahl eingeben.")
 
-def rezepte_ansehen_nach_zutat():
-    zutat = input("Welche Zutat(en) möchten Sie wählen?\n").strip().lower()
+def rezepte_ansehen_nach_zutaten():
+    zutat = [z.strip() for z in input("Welche Zutat(en) möchten Sie wählen?\nBitte Zutaten mit , trennen.\n").strip().lower().split(",")]
     rezepte = service.filter_rezepte_nach_zutaten(zutat)
 
     if not rezepte:
@@ -64,7 +64,7 @@ def rezepte_anzeigen_nach_gerichte():
     for i, rezept in enumerate(service.alle_rezeptnamen(), start=1):
         print(f"{i}. {rezept}")
 
-def rezepte_ansehen_nach_Gerichte():
+def rezepte_ansehen_nach_Gericht():
     rezepte_anzeigen_nach_gerichte()
     
     gerichte = service.filter_rezepte_nach_gericht("")
@@ -79,17 +79,14 @@ def rezepte_ansehen_nach_Gerichte():
     for zeile in rezepte.anzeigen():
         print(zeile)
     
-    
-    
-    
-    
+
 
 def rezepte_ansehen():
     while True:
         filterwahl = filter_auswaehlen()
 
         if filterwahl == "zutaten":
-            rezepte_ansehen_nach_zutat()
+            rezepte_ansehen_nach_zutaten()
             return
         
         elif filterwahl == "gang":
@@ -97,12 +94,11 @@ def rezepte_ansehen():
             return
         
         elif filterwahl == "gerichte":
-            rezepte_ansehen_nach_Gerichte()
+            rezepte_ansehen_nach_Gericht()
             return
         
         else:
             print("Ungültige Auswahl.")
-
 
 def rezept_einfuegen():
     Rezeptname = input("Wie heißt das Rezept?")
@@ -143,6 +139,7 @@ def rezept_loeschen():
 
         except ValueError:
             print("Ungültig!")
+
 
 
 while neustart:
