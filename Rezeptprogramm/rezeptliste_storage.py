@@ -1,53 +1,93 @@
+# storage.py
 from rezeptliste_model import Rezept
-
 import json
+from pathlib import Path
+from typing import List
+# Globale Liste für alle Rezepte
+Gerichte: List[Rezept] = []
 
-DATEI = "rezepte.json"
+# Pfad zur JSON-Datei
+DATEI = Path("rezepte.json")
+
+# Standardrezepte, falls JSON noch leer ist
+STANDARD_REZEPTE = [
+    Rezept(
+        "Gebratene Enokis",
+        ["Enokis", "Salz", "Bratöl"],
+        "Unteres Stück der Enoki abschneiden und in die Pfanne geben. "
+        "Anbraten bis sie knusprig und hellbraun sind.",
+        "Vorspeise",
+        ""
+    ),
+    Rezept(
+        "Kokoscurry mit Pilzen",
+        ["200 ml Kokosmilch", "Currypaste", "Pilze", "Udon Nudeln"],
+        "Alles in den Wok geben und garen.",
+        "Hauptspeise",
+        ""
+    ),
+    Rezept(
+        "Sushibowl",
+        ["Reis", "Nori Blätter", "Frischkäse", "Stremellachs", "Gurke", "Lauchzwiebeln"],
+        "Reis kochen, Zutaten klein schneiden, alles in einer Schüssel mischen.",
+        "Hauptspeise",
+        ""
+    ),
+    Rezept(
+        "Tofu Schokomousse",
+        ["Tofu", "Kakaopulver", "Agavendicksaft"],
+        "Tofu pürieren, mit Kakaopulver und Agavendicksaft vermischen, kalt stellen.",
+        "Dessert",
+        ""
+    )
+]
+
+# Gueltige Gänge
+gueltige_gaenge = ["vorspeise", "hauptspeise", "dessert"]
+
 
 def lade_rezepte():
-    try:
-        with open(DATEI, "r") as f:
+    """Lädt Rezepte aus JSON oder benutzt Standardrezepte"""
+    global Gerichte
+    if DATEI.exists():
+        with open(DATEI, "r", encoding="utf-8") as f:
             daten = json.load(f)
-            return [Rezept(**r) for r in daten]
-    except FileNotFoundError:
-        return[]
-    
-def speichere_rezepte(rezepte):
-    with open(DATEI, "w") as f:
-        json.dump([r.__dict__ for r in rezepte],f, indent=2)
-        
-        """ Rezept wird zu dicts konvertiert
-        dicts speichern Daten als Schlüssel-Wert-Paare 
-        also bspw. Schlüssel:"Name",Wert:"Gebratene Enokis"""
+        Gerichte = [
+            Rezept(
+                Name=d["Name"],
+                Zutaten=d["Zutaten"],
+                Zubereitung=d["Zubereitung"],
+                Gang=d["Gang"],
+                Notizen=d.get("Notizen", "")
+            )
+            for d in daten
+        ]
+    else:
+        # JSON existiert noch nicht -> Standardrezepte nutzen
+        Gerichte = STANDARD_REZEPTE.copy()
 
 
+def speichere_rezepte():
+    """Speichert alle Rezepte in der JSON-Datei"""
+    daten = [
+        {
+            "Name": r.Name,
+            "Zutaten": r.Zutaten,
+            "Zubereitung": r.Zubereitung,
+            "Gang": r.Gang,
+            "Notizen": r.Notizen
+        }
+        for r in Gerichte
+    ]
 
-Gerichte= lade_rezepte()
+    # Optional Backup erstellen
+    if DATEI.exists():
+        backup = DATEI.with_suffix(".json.bak")
+        DATEI.replace(backup)
 
-Gerichte = [Rezept("Gebratene Enokis",
-                    ["Enokis","Salz","Bratöl"],
-                    "Unteres Stück der Enoki abschneiden und in die mit Bratöl erhitzte " \
-                    "Pfanne geben. Die Enoki anbraten bis sie knusprig und hellbraun sind.",
-                    "Keine",
-                    "Vorspeise"),
-            Rezept("Kokoscurry mit Pilzen",
-                    ["200 ml Kokosmilch","Currypaste", "Pilze", "Udon Nudeln"],
-                    "Alles in den Wok und dann gib ihm!",
-                    "Keine",
-                    "Hauptspeise"),
-            Rezept("Sushibowl",
-                    ["Reis","Nori Blätter","Frischkäse","Stremellachs","Gurke","Lauchzwiebeln"],
-                    "Reis kochen, währenddessen Stremellachs klein schneiden oder zupfen. " \
-                    "Gurken sowie Lauchzwiebeln kleinschneiden. " \
-                    "Danach alles in eine Salatschüssel und mit dem gekochten Reis verrühren. " \
-                    "Nori Blätter nutzen um die Sushibowl mit den Händen zu essen.",
-                    "Keine",
-                    "Hauptspeise"),
-            Rezept("Tofu Schokomousse",
-                    ["Tofu" ,"Kakaopulver" ,"Agaven Dicksaft" ],
-                    "Tofu pürieren und mit Agaven Dicksaft und Kakaopulver vermischen. " \
-                    "Danach 1-2 Stunden kalt stellen.",
-                    "Keine",
-                    "Dessert")]
+    with open(DATEI, "w", encoding="utf-8") as f:
+        json.dump(daten, f, ensure_ascii=False, indent=2)
 
-gueltige_gaenge = ["vorspeise", "hauptspeise", "dessert"]
+
+# JSON beim Start laden
+lade_rezepte()

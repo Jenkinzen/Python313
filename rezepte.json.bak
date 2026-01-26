@@ -46,5 +46,14 @@
     "Zubereitung": "Tofu pürieren und mit Agaven Dicksaft und Kakaopulver vermischen. Danach 1-2 Stunden kalt stellen.",
     "Gang": "Dessert",
     "Notizen": "Keine"
+  },
+  {
+    "Name": "asd",
+    "Zutaten": [
+      "asd"
+    ],
+    "Zubereitung": "asd",
+    "Gang": "Dessert",
+    "Notizen": " "
   }
 ]

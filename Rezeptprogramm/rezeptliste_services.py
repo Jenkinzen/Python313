@@ -109,14 +109,14 @@ def rezept_nach_index(rezepte, index):
 
 def rezept_loeschen(rezeptwahl):
     storage.Gerichte.remove(rezeptwahl)
-    storage.speichere_rezepte(storage.Gerichte)
+    storage.speichere_rezepte()
 
 """speichere_rezepte speichert die überarbeitete Liste , quasi die Liste mit dem 
     entfernten Gericht wird gespeichert"""
 
 def rezept_hinzufuegen(rezept):
     storage.Gerichte.append(rezept)
-    storage.speichere_rezepte(storage.Gerichte) 
+    storage.speichere_rezepte() 
 
 def rezept_einfuegen(Rezeptname,Rezeptzutaten,Rezeptzubereitung,Rezeptgang,Rezeptnotizen = " "):
 
