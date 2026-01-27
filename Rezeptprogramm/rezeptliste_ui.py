@@ -78,7 +78,7 @@ def rezepte_ansehen_nach_Gericht():
     
     for zeile in rezepte.anzeigen():
         print(zeile)
-    
+
 
 
 def rezepte_ansehen():
