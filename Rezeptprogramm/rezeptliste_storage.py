@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 from typing import List
 
-# Globale Liste für alle Rezepte
+# Globale Liste für alle Rezepte(für JSON wichtig)
 Gerichte: List[Rezept] = []
 
 # Pfad zur JSON
@@ -44,7 +44,7 @@ STANDARD_REZEPTE = [
 # Gültige Gänge
 gueltige_gaenge = ["vorspeise", "hauptspeise", "dessert"]
 
-# JSON-Schema für Validierung
+# JSON-Schema für Validierung(für JSON wichtig)
 REZEPT_SCHEMA = {
     "Name": str,
     "Zutaten": list,
@@ -54,6 +54,7 @@ REZEPT_SCHEMA = {
 }
 
 def rezept_validieren(rezept: dict) -> bool:
+    
     """Prüft, ob ein Rezept alle erforderlichen Felder hat und die richtigen Typen nutzt."""
     try:
         for feld, typ in REZEPT_SCHEMA.items():

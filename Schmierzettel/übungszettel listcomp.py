@@ -48,6 +48,29 @@ return [all(...)]
 ✅ Sondern:
 return all(...)
 """
+
+####################################################################
+"""Rezept:
+Zutaten = ["Tomate", "Salz", "Olivenöl"]
+
+Gesuchte Zutat: "salz"
+
+Loop:
+- "Tomate" ❌
+- "Salz" ✔️ ← STOP (any)
+
+Also any stoppt beim ersten Treffer und sucht nicht weiter."""
+####################################################################
+
+"""kleine_zutaten = [
+    zutat["Name"] 
+    for zutat in rezept["Zutaten"] 
+    if zutat["Einheit"] in ["ml", "g"] and zutat["Menge"] < 200
+]
+
+Das ist ein beispiel, wie man eine LC macht, wenn ein Attribut einer klasse
+Unterobjekte hat (wie das hier oben, "name" bspw. hat nur einen string gespeichert und wird dann als Wert betitelt) ( hier hat "Zutaten" noch unterkategorien "Einheit" und "Menge")"""
+
 #######################ÜBUNGSGEBIET#################################
 """
 class Rezept:
