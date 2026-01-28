@@ -18,7 +18,7 @@ class Rezept:
         self.name = name
         self.zutaten = zutaten          # Liste von Zutat-Objekten
         self.zubereitung = zubereitung
-        self.gang = gang
+        self.gang = gang 
         self.notizen = notizen
 
     def _format_block(self, label, value, width=60):

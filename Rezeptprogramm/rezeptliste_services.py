@@ -79,6 +79,32 @@ def filter_rezepte_nach_zutaten(zutaten):
 
 ######## ÄNDERUNGEN
 
+def rezepterstellung(rezeptname, zutaten_strings, zubereitung, gang, notizen=""):
+    
+
+    Zutatenliste = []
+    for zs in zutaten_strings:
+        teile = zs.split()
+        if not teile:
+            continue
+        zutatenname = " ".join(teile[:-2]) if len(teile) > 2 else teile[0]
+        menge = teile[-2] if len(teile) > 1 else None
+        einheit = teile[-1] if len(teile) > 2 else (teile[-1] if len(teile) == 2 else None)
+        Zutatenliste.append(model.Zutaten(name=zutatenname, menge=menge, einheit=einheit))
+
+    neues_rezept = model.Rezept(
+        name=rezeptname,
+        zutaten=Zutatenliste,
+        zubereitung=zubereitung,
+        notizen="",
+        gang=gang.title()
+    )
+    rezept_hinzufuegen(neues_rezept)
+    return neues_rezept
+
+def rezept_laden():
+    storage.lade_rezepte()
+
 def rezept_loeschen(rezeptwahl):
     """speichere_rezepte speichert die überarbeitete Liste , quasi die Liste mit dem 
     entfernten Gericht wird gespeichert"""

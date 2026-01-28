@@ -30,7 +30,7 @@ def lade_rezepte():
                 z.get("menge"),
                 z.get("einheit")
             )
-            for z in r["zutaten"]
+            for z in r.get("zutaten", [])
         ]
 
         rezept = Rezept(
@@ -67,10 +67,12 @@ def speichere_rezepte():
 
 
 def rezept_hinzufuegen(rezept: Rezept):
+    global Gerichte
     Gerichte.append(rezept)
     speichere_rezepte()
 
 def rezept_loeschen(rezept: Rezept):
+    global Gerichte
     Gerichte.remove(rezept)
     speichere_rezepte()
 

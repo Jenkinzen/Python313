@@ -2,8 +2,6 @@ import rezeptliste_services as service
 import rezeptliste_model as model
 neustart = True
 
-
-
 def filter_auswaehlen():
     return input("Nach welchen Kriterien soll die Rezeptauswahl gefiltert werden?\n"
                  "[Gerichte]\n[Zutaten]\noder\n[Gang]?\n").strip().lower()
@@ -99,44 +97,22 @@ def rezepte_ansehen():
             print("Ungültige Auswahl.")
 
 def rezept_einfuegen():
-    Rezeptname = input("Wie heißt das Rezept?")
-    zutaten_input = input("Welche Zutaten brauch es?( Zutaten bitte mit , trennen[z.B. Enokis 200 g, Salz 2 Prise])")
-    Rezeptzubereitung = input("Wie wird es zubereitet?") 
-
-    Rezeptgang = None
-    while Rezeptgang is None:
+    rezeptname = input("Wie heißt das Rezept?").strip()
+    zutaten_input = input("Welche Zutaten in welcher Menge brauch es?( Zutaten bitte mit , trennen[z.B. Enokis 200 g, Salz 2 Prise])")
+    zutaten_strings = [z.strip() for z in zutaten_input.split(",")if z.strip()]
+    zubereitung = input("Wie wird es zubereitet?") 
+    notizen = input("Notizen oder Tipps")
+    gang = None
+    while gang is None:
         eingabe = input("Ist es Vorspeise, Hauptspeise oder Dessert? ").strip().lower()
         if service.gang_pruefen(eingabe):
-            Rezeptgang = eingabe
+                gang = eingabe
         else:
             print("Ungültige Auswahl! Bitte erneut eingeben.") 
 
-    Zutatenliste = []
-    for z in zutaten_input.split(","):
-        parts = z.strip().split(" ")
-        if len(parts) >= 3:
-            name = " ".join(parts[:-2])
-            menge = parts[-2]
-            einheit = parts[-1]
-        elif len(parts) == 2:
-            name = parts[0]
-            menge = parts[1]
-            einheit = ""
-        else:
-            name = parts[0]
-            menge = None
-            einheit = ""
-        Zutatenliste.append(model.Zutaten(name, menge, einheit))
-
-    neues_rezept = model.Rezept(
-        name=Rezeptname,
-        zutaten=Zutatenliste,
-        zubereitung=Rezeptzubereitung,
-        notizen="",
-        gang=Rezeptgang.title()
-    )
-    service.rezept_hinzufuegen(neues_rezept)
-    print(f"{neues_rezept} wurde eingefügt!")
+    rezept = service.rezepterstellung(rezeptname, zutaten_strings, zubereitung,gang,notizen)
+    
+    print(f"{rezept} wurde eingefügt!")
     return
 
 def rezept_loeschen():
@@ -163,7 +139,7 @@ def rezept_loeschen():
         except ValueError:
             print("Ungültig!")
 
-
+service.rezept_laden()
 
 while neustart:
 
