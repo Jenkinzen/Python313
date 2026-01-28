@@ -5,7 +5,7 @@ import rezeptliste_storage as storage
 
 def alle_rezeptnamen():
     return[
-        rezepte.Name for rezepte in storage.Gerichte
+        rezepte.name for rezepte in storage.Gerichte
     ]
   
 def alle_rezepte():                                               
@@ -23,7 +23,7 @@ def rezept_nach_index(rezepte, index):
 def rezept_finden(rezeptname):
 
     for rezept in storage.Gerichte:
-        if rezept.Name.strip().lower() == rezeptname.strip().lower():
+        if rezept.name.strip().lower() == rezeptname.strip().lower():
             return rezept
 
     return None 
@@ -32,7 +32,7 @@ def rezept_finden(rezeptname):
 ######## VALIDIERUNG
 
 def gang_pruefen(gang):
-    return gang.lower() in storage.gueltige_gaenge
+    return gang.lower() in storage.GUELTIGE_GAENGE
 
 def gang_validieren(gerichte, gang):
     """wenn irgendwas (any) in rezept.Gang das beinhaltet was der input war dann gibs raus
@@ -49,12 +49,12 @@ def gang_validieren(gerichte, gang):
 def filter_rezepte_nach_gericht(gericht):
     """wollte eigentlich mit "any" arbeiten, aber teiltreffer ("Bro" eingabe zeigt "Brokkoli" an)
     werden auch durch "in" ermöglicht. any macht kein sinn weil gerichte.Name keine Liste
-     sondern ein String ist, bei Zutaten machte es Sinn weil Zutaten eine Liste ist.
-      Faustregel > Liste = any() / String = kein any() sondern in oder halt was grade passt. """
+     sondern ein String ist, bei Zutaten machte es Sinn weil Zutaten eine Liste ist.(any = irgendeins aus (der liste)/ in = irgendetwas in (string))
+     """
     gericht = gericht.strip().lower()
     return [
         rezept for rezept in storage.Gerichte
-        if gericht.lower().strip() in rezept.Name.strip().lower()
+        if gericht.lower().strip() in rezept.name.strip().lower()
     ] 
 
 def filter_rezepte_nach_gang(gang):
@@ -62,16 +62,16 @@ def filter_rezepte_nach_gang(gang):
    eine weitere liste(wie unten die zutatenliste) aufrufen zu müssen."""
     return [
         rezept for rezept in storage.Gerichte
-        if rezept.Gang.strip().lower() == gang.strip().lower()
+        if rezept.gang.strip().lower() == gang.strip().lower()
     ]
 
 def filter_rezepte_nach_zutaten(zutaten):
     """ rezept for rezept in storage.Gerichte > geh jedes rezept durch was gespeichert wurde.(s.Gerichte = rezeptsammlung / rezept for rezept = jedes Rezept einzeln durchgehen)
     any(zutat in einzelne_zutat = gibt es die gesuchten Zutaten im Rezept? ///// for einzelne_zutat in rezept.Zutaten) = guck jede Zutat des Rezepts an.
-    all(any(bla)for zutat in zutaten) =  sind ALLE gesuchten Zutaten in diesem Rezept?"""
+    all(any(bla)for zutat in zutaten) =  sind ALLE gesuchten Zutaten in diesem Rezept?""" 
     return[
         rezept for rezept in storage.Gerichte
-        if all(any (zutat in einzelne_zutat.lower() for einzelne_zutat in rezept.Zutaten)
+        if all(any (zutat in einzelne_zutat.Name.lower() for einzelne_zutat in rezept.zutaten)
                for zutat in zutaten
         )
     ]
@@ -101,11 +101,11 @@ leeres neues rezept wird generiert und mit den Daten aus der UI
     
     # Neues Rezept machen
     neues_rezept = model.Rezept(
-        Name=Rezeptname,
-        Zutaten=Zutatenliste,
-        Zubereitung=Rezeptzubereitung,
-        Notizen=Rezeptnotizen,
-        Gang=Rezeptgang.title()
+        name=Rezeptname,
+        zutaten=Zutatenliste,
+        zubereitung=Rezeptzubereitung,
+        notizen=Rezeptnotizen,
+        gang=Rezeptgang.title()
     )
 
     
