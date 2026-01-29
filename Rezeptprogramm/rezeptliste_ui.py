@@ -75,8 +75,6 @@ def rezepte_ansehen_nach_Gericht():
         print(zeile)
 
 
-
-
 def rezepte_ansehen():
     while True:
         filterwahl = filter_auswaehlen()

@@ -80,7 +80,30 @@ def filter_rezepte_nach_zutaten(zutaten):
 ######## ÄNDERUNGEN
 
 def rezepterstellung(rezeptname, zutaten_strings, zubereitung, gang, notizen=""):
+    """In die Leere Zutatenliste kommen nachher die Objekte aus der Funktion.
+        zs variable für Zutat als Text ( wie das 1. x in x for x in Gerichte )
+        teile = zs.split() -> die Sachen werden durch leerzeichen gesplittet(also Name,menge,einheit)
+        if not teile -> überspringen von allem was sonst zum error führen würde.
+        zutatenname Zeile -> teile (also die Teile der Zutat: Name, menge, einheit)
+          [:-2] heißt NICHT geteilt durch -2 sondern : sagt alles und -2 bis auf die letzten beiden! 
+          damit wird jeder Input bis auf die letzten beiden zum "teil" Name hinzugefügt.
+          wenns bspw [:-1] wär dann würde die Menge noch mit beim Namen stehen.
+          und durch .join davor wird die liste von wörtern zu einem String mit Leerzeichen.
+        if len(teile) > 2 -> also mach .join(teile[:-2]) insofern mehr als 2 wörter eingegeben werde.
+        else teile[0] -> wenn weniger als 2 wörter eingegeben werden, nimm halt das 1 Wort oder die Leerstelle.
+        
+        menge -> teile[-2] if len(teile) > 1  --> also vorletztes Teil
+            wenn es mehr als 1 teil gibt
+            else None -> sonst gibts halt keine Menge. 
+            (Unfassbar smart, weil es "Salz , Prise" gibt also angaben ohne Menge,
+            aber es gibt keine Angaben ohne Einheit aber mit Menge, weil was will jemand mit
+            der aussage " du brauchst 150 Salz")
+            
+        einheit -> teile[-1] also ist das letzte teil
+                if len(teile) > 2 -> insofern es mehr als 2 teile gibt
+                else (teile[-1] if len(teile) == 2) -> wenn es genau 2 teile gibt."""
     
+
 
     Zutatenliste = []
     for zs in zutaten_strings:
@@ -88,8 +111,8 @@ def rezepterstellung(rezeptname, zutaten_strings, zubereitung, gang, notizen="")
         if not teile:
             continue
         zutatenname = " ".join(teile[:-2]) if len(teile) > 2 else teile[0]
-        menge = teile[-2] if len(teile) > 1 else None
-        einheit = teile[-1] if len(teile) > 2 else (teile[-1] if len(teile) == 2 else None)
+        menge = teile[-2] if len(teile) > 2 else None
+        einheit = teile[-1] if len(teile) >= 2 else None
         Zutatenliste.append(model.Zutaten(name=zutatenname, menge=menge, einheit=einheit))
 
     neues_rezept = model.Rezept(
