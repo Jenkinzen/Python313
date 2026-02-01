@@ -17,6 +17,9 @@ Ctrl + Shift + K
 Aktuelles Wort markieren:
 Ctrl + D
 
+Alles markieren:
+Ctrl + A
+
 Nächstes gleiches Wort ebenfalls markieren: 
 nochmal Ctrl + D
 

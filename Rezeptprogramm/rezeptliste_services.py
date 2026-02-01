@@ -36,11 +36,11 @@ def gang_pruefen(gangeingabe):
 
 def gang_validieren(gerichte, gangeingabe):
     """wenn irgendwas (any) in rezept.Gang das beinhaltet was der input war dann gibs raus
-   any ----> auch wenn man des eingibt zeigt er dessert an weil des dadrin steckt.
+   any ----> auch wenn man "des" eingibt zeigt er dessert an weil des dadrin steckt.
    ohne any würde er dann nichts raus geben."""
     gang = gangeingabe.strip().lower()
     return any(
-        rezept.Gang.strip().lower() == gangeingabe
+        rezept.Gang.strip().lower() == gang
         for rezept in gerichte
     )
 

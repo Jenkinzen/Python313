@@ -114,18 +114,19 @@ def rezept_einfuegen():
     return
 
 def rezept_loeschen():
-        for zeile in service.alle_rezepte():
-            print(zeile.name)
+        for i, rezept in enumerate(service.alle_rezeptnamen(), start=1):
+            print(f"{i}. {rezept}")
         try:
-
-            rezeptname = input("Welches Rezept soll gelöscht werden?")
-            rezept_zum_loeschen = service.rezept_finden(rezeptname)
+            gerichte = service.alle_rezepte()
+            nummer = int(input("Welche Nummer soll gelöscht werden?"))
+            rezept_zum_loeschen = service.rezept_nach_index(gerichte,nummer)
 
             if rezept_zum_loeschen is None:
                 print("Rezept nicht gefunden.")
                 return
 
-            rezept_zum_loeschen.anzeigen()
+            for zeile in rezept_zum_loeschen.anzeigen():
+                print(zeile)
             rueckversichern = input(f"Sind sie sicher, dass {rezept_zum_loeschen.name} gelöscht werden soll? Ja/Nein").strip().lower()
             if rueckversichern.strip().lower() == "ja":
                     service.rezept_loeschen(rezept_zum_loeschen)
