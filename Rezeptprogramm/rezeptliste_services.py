@@ -31,16 +31,16 @@ def rezept_finden(rezeptname):
 
 ######## VALIDIERUNG
 
-def gang_pruefen(gang):
-    return gang.lower() in storage.GUELTIGE_GAENGE
+def gang_pruefen(gangeingabe):
+    return gangeingabe.lower() in storage.GUELTIGE_GAENGE
 
-def gang_validieren(gerichte, gang):
+def gang_validieren(gerichte, gangeingabe):
     """wenn irgendwas (any) in rezept.Gang das beinhaltet was der input war dann gibs raus
    any ----> auch wenn man des eingibt zeigt er dessert an weil des dadrin steckt.
    ohne any würde er dann nichts raus geben."""
-    gang = gang.strip().lower()
+    gang = gangeingabe.strip().lower()
     return any(
-        rezept.Gang.strip().lower() == gang
+        rezept.Gang.strip().lower() == gangeingabe
         for rezept in gerichte
     )
 
@@ -57,12 +57,12 @@ def filter_rezepte_nach_gericht(gericht):
         if gericht.lower().strip() in rezept.name.strip().lower()
     ] 
 
-def filter_rezepte_nach_gang(gang):
+def filter_rezepte_nach_gang(gangeingabe):
     """Siehe filter_rezepte_nach_zutaten, selbe sache nur ohne aus einer liste(gerichte)
    eine weitere liste(wie unten die zutatenliste) aufrufen zu müssen."""
     return [
         rezept for rezept in storage.Gerichte
-        if rezept.gang.strip().lower() == gang.strip().lower()
+        if rezept.gang.strip().lower() == gangeingabe.strip().lower()
     ]
 
 def filter_rezepte_nach_zutaten(zutaten):
@@ -84,6 +84,7 @@ def rezepterstellung(rezeptname, zutaten_strings, zubereitung, gang, notizen="")
         zs variable für Zutat als Text ( wie das 1. x in x for x in Gerichte )
         teile = zs.split() -> die Sachen werden durch leerzeichen gesplittet(also Name,menge,einheit)
         if not teile -> überspringen von allem was sonst zum error führen würde.
+
         zutatenname Zeile -> teile (also die Teile der Zutat: Name, menge, einheit)
           [:-2] heißt NICHT geteilt durch -2 sondern : sagt alles und -2 bis auf die letzten beiden! 
           damit wird jeder Input bis auf die letzten beiden zum "teil" Name hinzugefügt.
@@ -100,11 +101,8 @@ def rezepterstellung(rezeptname, zutaten_strings, zubereitung, gang, notizen="")
             der aussage " du brauchst 150 Salz")
             
         einheit -> teile[-1] also ist das letzte teil
-                if len(teile) > 2 -> insofern es mehr als 2 teile gibt
-                else (teile[-1] if len(teile) == 2) -> wenn es genau 2 teile gibt."""
-    
-
-
+                if len(teile) >= 2 -> insofern es genau oder mehr als 2 teile gibt.
+    """
     Zutatenliste = []
     for zs in zutaten_strings:
         teile = zs.split()

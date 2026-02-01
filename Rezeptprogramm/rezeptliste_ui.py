@@ -7,8 +7,8 @@ def filter_auswaehlen():
                  "[Gerichte]\n[Zutaten]\noder\n[Gang]?\n").strip().lower()
 
 def rezepte_ansehen_nach_gang():
-    gang = input("Welchen Gang möchten Sie wählen?\n").strip().lower()
-    rezepte = service.filter_rezepte_nach_gang(gang)
+    gangeingabe = input("Welchen Gang möchten Sie wählen?\n").strip().lower()
+    rezepte = service.filter_rezepte_nach_gang(gangeingabe)
 
     if not rezepte:
         print("Keine Rezepte gefunden.")
@@ -100,15 +100,15 @@ def rezept_einfuegen():
     zutaten_strings = [z.strip() for z in zutaten_input.split(",")if z.strip()]
     zubereitung = input("Wie wird es zubereitet?") 
     notizen = input("Notizen oder Tipps")
-    gang = None
-    while gang is None:
+    gangeingabe = None
+    while gangeingabe is None:
         eingabe = input("Ist es Vorspeise, Hauptspeise oder Dessert? ").strip().lower()
         if service.gang_pruefen(eingabe):
-                gang = eingabe
+                gangeingabe = eingabe
         else:
             print("Ungültige Auswahl! Bitte erneut eingeben.") 
 
-    rezept = service.rezepterstellung(rezeptname, zutaten_strings, zubereitung,gang,notizen)
+    rezept = service.rezepterstellung(rezeptname, zutaten_strings, zubereitung,gangeingabe,notizen)
     
     print(f"{rezept} wurde eingefügt!")
     return
