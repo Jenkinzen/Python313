@@ -12,8 +12,10 @@ Gerichte: List[Rezept] = []
 GUELTIGE_GAENGE = ["vorspeise", "hauptspeise", "dessert"]
 
 def lade_rezepte():
+    """global Gerichte ist der Verweis auf die zentrale leere Liste  (Gerichte: List[Rezept] = [])
+       in DIESEM Modul (rezeptliste_storage) in die beim öffnen des Programmes die Daten in der JSON Datei reingeladen werden.
+        """
     global Gerichte
-
     if not DATEI.exists():
         Gerichte = []
         return
