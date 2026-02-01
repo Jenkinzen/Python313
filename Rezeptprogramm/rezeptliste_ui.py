@@ -7,72 +7,87 @@ def filter_auswaehlen():
                  "[Gerichte]\n[Zutaten]\noder\n[Gang]?\n").strip().lower()
 
 def rezepte_ansehen_nach_gang():
-    gangeingabe = input("Welchen Gang möchten Sie wählen?\n").strip().lower()
-    rezepte = service.filter_rezepte_nach_gang(gangeingabe)
+    while True:
+        gangeingabe = input("Welchen Gang möchten Sie wählen?\n").strip().lower()
+        rezepte = service.filter_rezepte_nach_gang(gangeingabe)
 
-    if not rezepte:
-        print("Keine Rezepte gefunden.")
-        return
+        if not rezepte:
+            print("Keine Rezepte gefunden.")
+            continue
 
-    
-    for i, rezept in enumerate(rezepte, start=1):
-        print(f"{i}. {rezept.name}")
+        
+        for i, rezept in enumerate(rezepte, start=1):
+            print(f"{i}. {rezept.name}")
 
-    
-    try:
-        nummer = int(input("Nummer wählen:\n"))
-        rezept = service.rezept_nach_index(rezepte, nummer)
+        while True:
+            try:
+                nummer = int(input("Nummer wählen:\n"))
+                rezept = service.rezept_nach_index(rezepte, nummer)
 
-        if rezept is None:
-            print("Ungültige Nummer.")
-            return
+                if rezept is None:
+                    print("Ungültige Nummer.")
+                    continue
 
-        for zeile in rezept.anzeigen():
-            print(zeile)
+                for zeile in rezept.anzeigen():
+                    print(zeile)
 
-    except ValueError:
-        print("Bitte eine Zahl eingeben.")
+                break
+
+            except ValueError:
+                print("Bitte eine Zahl eingeben.")
 
 def rezepte_ansehen_nach_zutaten():
-    zutat = [z.strip() for z in input("Welche Zutat(en) möchten Sie wählen?\nBitte Zutaten mit , trennen.\n").strip().lower().split(",")]
-    rezepte = service.filter_rezepte_nach_zutaten(zutat)
+    while True:
+        zutat = [z.strip() for z in input("Welche Zutat(en) möchten Sie wählen?\nBitte Zutaten mit , trennen.\n").strip().lower().split(",")]
+        rezepte = service.filter_rezepte_nach_zutaten(zutat)
 
-    if not rezepte:
-        print("Keine Rezepte gefunden.")
-        return
+        if not rezepte:
+            print("Keine Rezepte gefunden.")
+            continue    
 
-    for i, rezept in enumerate(rezepte, start=1):
-        print(f"{i}. {rezept.name}")
+        for i, rezept in enumerate(rezepte, start=1):
+            print(f"{i}. {rezept.name}")
 
-    try:
-        nummer = int(input("Nummer wählen:\n"))
-        rezept = service.rezept_nach_index(rezepte, nummer)
+        while True:
 
-        if rezept is None:
-            print("Ungültige Nummer.")
-            return
+            try:
+                nummer = int(input("Nummer wählen:\n"))
+                rezept = service.rezept_nach_index(rezepte, nummer)
 
-        for zeile in rezept.anzeigen():
-            print(zeile)
+                if rezept is None:
+                    print("Ungültige Nummer.")
+                    continue
 
-    except ValueError:
-        print("Bitte eine Zahl eingeben.")   
+                for zeile in rezept.anzeigen():
+                    print(zeile)
+                    #wenn hier break stehen würde bricht er print(zeile) 
+                    #nach der ersten zeile ab ( also printet nur namen aber nicht zutaten,zubereitung etc.)
+                break    
+
+            except ValueError:
+                print("Bitte eine Zahl eingeben.")  
+                #hier brauch man kein continue weil die Schleife hier eh endet und dann wieder anfängt
+            
+                
 
 def rezepte_ansehen_nach_Gericht():
     for i, rezept in enumerate(service.alle_rezeptnamen(), start=1):
         print(f"{i}. {rezept}")
-    
-    gerichte = service.filter_rezepte_nach_gericht("")
-    nummer = int(input("Wählen sie bitte die Nummer des Gerichtes:\n"))
-    rezepte = service.rezept_nach_index(gerichte,nummer)
+    while True:
+        gerichte = service.filter_rezepte_nach_gericht("")
+        nummer = int(input("Wählen sie bitte die Nummer des Gerichtes:\n"))
+        if nummer > len(gerichte):
+            print("Falsche Zahl eingegeben!")
+            continue
+        rezepte = service.rezept_nach_index(gerichte,nummer)
 
-    if not rezepte:
-        print("Keine Rezepte gefunden.")
-        return
+        if not rezepte:
+            print("Kein Rezept passt zu diesen Angaben.")
+            continue
 
-    
-    for zeile in rezepte.anzeigen():
-        print(zeile)
+        
+        for zeile in rezepte.anzeigen():
+            print(zeile)
 
 
 def rezepte_ansehen():
@@ -116,27 +131,37 @@ def rezept_einfuegen():
 def rezept_loeschen():
         for i, rezept in enumerate(service.alle_rezeptnamen(), start=1):
             print(f"{i}. {rezept}")
-        try:
-            gerichte = service.alle_rezepte()
-            nummer = int(input("Welche Nummer soll gelöscht werden?"))
-            rezept_zum_loeschen = service.rezept_nach_index(gerichte,nummer)
+        
+        while True:
+            try:
+                gerichte = service.alle_rezepte()
+                nummer = int(input("Welche Nummer soll gelöscht werden?"))
 
-            if rezept_zum_loeschen is None:
-                print("Rezept nicht gefunden.")
-                return
+                if nummer > len(service.alle_rezepte()):  
+                # eigentlich wäre es klüger len(gerichte) zu nutzen weil sonst alle_rezepte 2 mal aufgerufen wird aber für jetzt
+                # ist es für mich ein beispiel der Möglichkeiten und für meine Noob-Coder Augen verständlicher herauszulesen.               
+                    print("Ungültige Auswahl!")                             
+                    continue
+                
+                rezept_zum_loeschen = service.rezept_nach_index(gerichte,nummer)
 
-            for zeile in rezept_zum_loeschen.anzeigen():
-                print(zeile)
-            rueckversichern = input(f"Sind sie sicher, dass {rezept_zum_loeschen.name} gelöscht werden soll? Ja/Nein").strip().lower()
-            if rueckversichern.strip().lower() == "ja":
-                    service.rezept_loeschen(rezept_zum_loeschen)
-                    print(f"{rezept_zum_loeschen} wurde gelöscht!")
-            else:
-                print(f"Das {rezept_zum_loeschen} wird nicht gelöscht.")
-                return
+                if rezept_zum_loeschen is None:
+                    print("Rezept nicht gefunden.")
+                    return
 
-        except ValueError:
-            print("Ungültig!")
+                for zeile in rezept_zum_loeschen.anzeigen():
+                    print(zeile)
+                rueckversichern = input(f"Sind sie sicher, dass {rezept_zum_loeschen.name} gelöscht werden soll? Ja/Nein").strip().lower()
+                if rueckversichern.strip().lower() == "ja":
+                        service.rezept_loeschen(rezept_zum_loeschen)
+                        print(f"{rezept_zum_loeschen} wurde gelöscht!")
+                        return
+                else:
+                    print(f"Das {rezept_zum_loeschen} wird nicht gelöscht.")
+                    break
+
+            except ValueError:
+                print("Ungültig!")
 
 service.rezept_laden()
 

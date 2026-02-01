@@ -71,7 +71,7 @@ def filter_rezepte_nach_zutaten(zutaten):
     all(any(bla)for zutat in zutaten) =  sind ALLE gesuchten Zutaten in diesem Rezept?""" 
     return[
         rezept for rezept in storage.Gerichte
-        if all(any (zutat in einzelne_zutat.Name.lower() for einzelne_zutat in rezept.zutaten)
+        if all(any (zutat in einzelne_zutat.name.lower() for einzelne_zutat in rezept.zutaten)
                for zutat in zutaten
         )
     ]
@@ -83,7 +83,8 @@ def rezepterstellung(rezeptname, zutaten_strings, zubereitung, gang, notizen="")
     """In die Leere Zutatenliste kommen nachher die Objekte aus der Funktion.
         zs variable für Zutat als Text ( wie das 1. x in x for x in Gerichte )
         teile = zs.split() -> die Sachen werden durch leerzeichen gesplittet(also Name,menge,einheit)
-        if not teile -> überspringen von allem was sonst zum error führen würde.
+        if not teile -> überspringen von allem was sonst zum error führen würde, bzw durch so einen Input
+        wird man per continue dann wieder an den Schleifenanfang gebracht für erneuten input.
 
         zutatenname Zeile -> teile (also die Teile der Zutat: Name, menge, einheit)
           [:-2] heißt NICHT geteilt durch -2 sondern : sagt alles und -2 bis auf die letzten beiden! 
