@@ -2,50 +2,70 @@ import rezeptliste_services as service
 import rezeptliste_model as model
 neustart = True
 
+def eingabezahl_pruefen(prompt,min_value=None,max_value=None):
+    while True:
+        raw = input(prompt)
+        try:
+            value = int(raw)
+
+        except ValueError:
+            print("Bitte eine Zahl eingeben.")
+            continue
+
+        if min_value is not None and value < min_value:
+            print("Die Nummer ist zu klein.")
+            continue
+
+        if max_value is not None and value > max_value:
+            print("Die Nummer ist zu groß.")
+            continue
+
+        return value
+
+
 def filter_auswaehlen():
-    return input("Nach welchen Kriterien soll die\n"
+    return eingabezahl_pruefen("Nach welchen Kriterien soll die\n"
                 "Rezeptauswahl gefiltert werden?\n\n"
                  "1-[Gerichte]\n"
                  "2-[Zutaten]\n"
                  "3-[Gang]\n\n"
-                 "0-[Zurück]:\n")
+                 "0-[Zurück]:\n\n"
+                 "Auswahl:", 
+                 min_value=0,
+                 max_value=3)
 
 
 def rezepte_ansehen_nach_gang():
     while True:
-        gangeingabe = input("Welchen Gang möchten Sie wählen?\n\n"
+        gang_map = {1: "vorspeise",2: "hauptspeise",3:"dessert"}
+        gangeingabe = eingabezahl_pruefen("Welchen Gang möchten Sie wählen?\n\n"
         "1-[Vorspeise],\n"
         "2-[Hauptspeise]\n"
         "3-[Dessert]\n\n" 
-        "0-[Zurück]:\n")
+        "0-[Zurück]:\n\n"
+        "Auswahl:",
+        min_value=0, 
+        max_value=3)
         
-
-        if gangeingabe == "0":
+        if gangeingabe == 0:
             return
+
+        gangeingabe = gang_map[gangeingabe]
+
         
-        elif gangeingabe == "1":
-            gangeingabe = "vorspeise"
-
-        elif gangeingabe == "2":
-            gangeingabe = "hauptspeise"
-
-        elif gangeingabe == "3":
-            gangeingabe = "dessert"
-
-        else:
-            print("Ungültige Auswahl.")
-            continue
+        
 
         rezepte = service.filter_rezepte_nach_gang(gangeingabe)
-
+        print()
         for i, rezept in enumerate(rezepte, start=1):
-            print(f"{i}. {rezept.name}\n\n"
-                  "0-[Zurück]:\n")
+            print(f"{i}. {rezept.name}")
 
+        print()
+        print("0-[Zurück]\n")
         while True:
             try:
-                nummer = int(input("Nummer wählen:\n" 
-                "0-[Zurück]:\n"))
+                nummer = eingabezahl_pruefen("Nummer wählen:\n" 
+                ,min_value=0,max_value=len(rezepte))
 
                 if nummer == 0:
                     break
@@ -86,7 +106,7 @@ def rezepte_ansehen_nach_zutaten():
         while True:
 
             try:
-                nummer = int(input("Nummer wählen:\n"))
+                nummer = eingabezahl_pruefen("Nummer wählen:\n",min_value=0,max_value=len(rezepte))
                 rezept = service.rezept_nach_index(rezepte, nummer)
 
                 if rezept is None:
@@ -108,8 +128,8 @@ def rezepte_ansehen_nach_Gericht():
         for i, rezept in enumerate(service.alle_rezeptnamen(), start=1):
             print(f"{i}. {rezept}")
         gerichte = service.filter_rezepte_nach_gericht("")
-        nummer = int(input("Wählen sie bitte die Nummer des Gerichtes,\n"
-        "geben sie 0 ein um zurück zur Kriterienauswahl zu gelangen:\n"))
+        nummer = eingabezahl_pruefen("Wählen sie bitte die Nummer des Gerichtes,\n"
+        "geben sie 0 ein um zurück zur Kriterienauswahl zu gelangen:\n",min_value=0,max_value=len(gerichte))
 
         if nummer == 0:
             return
@@ -132,18 +152,18 @@ def rezepte_ansehen():
     while True:
         filterwahl = filter_auswaehlen()
 
-        if filterwahl == "0":
+        if filterwahl == 0:
             return
         
-        elif filterwahl == "1":
+        elif filterwahl == 1:
             rezepte_ansehen_nach_Gericht()
             continue
 
-        elif filterwahl == "2":
+        elif filterwahl == 2:
             rezepte_ansehen_nach_zutaten()
             continue
         
-        elif filterwahl == "3":
+        elif filterwahl == 3:
             rezepte_ansehen_nach_gang()
             continue
         
@@ -182,8 +202,8 @@ def rezept_loeschen():
         while True:
             try:
                 gerichte = service.alle_rezepte()
-                nummer = int(input("Welche Nummer soll gelöscht werden?\n"
-                "0-[Zurück]:\n"))
+                nummer = eingabezahl_pruefen("Welche Nummer soll gelöscht werden?\n"
+                "0-[Zurück]:\n")
 
                 if nummer == 0:
                     break
@@ -211,7 +231,7 @@ def rezept_loeschen():
                         return
                 
                 else:
-                    print(f"Das {rezept_zum_loeschen} wird nicht gelöscht.")
+                    print(f"{rezept_zum_loeschen} wird nicht gelöscht.")
                     break
 
             except ValueError:
