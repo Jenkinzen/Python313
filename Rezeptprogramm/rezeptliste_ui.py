@@ -8,30 +8,48 @@ def filter_auswaehlen():
                  "1-[Gerichte]\n"
                  "2-[Zutaten]\n"
                  "3-[Gang]\n\n"
-                 "geben sie [0] ein um zurück zum Menü zu gelangen:\n").strip().lower()
+                 "0-[Zurück]:\n")
 
 
 def rezepte_ansehen_nach_gang():
     while True:
-        gangeingabe = input("Welchen Gang möchten Sie wählen,\n"
-        "[Vorspeise],[Hauptspeise] oder[Dessert]?\n" \
-        "Geben sie [ 0 ] ein um zurück zum Menü zu gelangen:\n").strip().lower()
-        rezepte = service.filter_rezepte_nach_gang(gangeingabe)
+        gangeingabe = input("Welchen Gang möchten Sie wählen?\n\n"
+        "1-[Vorspeise],\n"
+        "2-[Hauptspeise]\n"
+        "3-[Dessert]\n\n" 
+        "0-[Zurück]:\n")
+        
 
         if gangeingabe == "0":
             return
+        
+        elif gangeingabe == "1":
+            gangeingabe = "vorspeise"
 
-        if not rezepte:
-            print("Keine Rezepte gefunden.")
+        elif gangeingabe == "2":
+            gangeingabe = "hauptspeise"
+
+        elif gangeingabe == "3":
+            gangeingabe = "dessert"
+
+        else:
+            print("Ungültige Auswahl.")
             continue
 
-        
+        rezepte = service.filter_rezepte_nach_gang(gangeingabe)
+
         for i, rezept in enumerate(rezepte, start=1):
-            print(f"{i}. {rezept.name}")
+            print(f"{i}. {rezept.name}\n\n"
+                  "0-[Zurück]:\n")
 
         while True:
             try:
-                nummer = int(input("Nummer wählen:\n"))
+                nummer = int(input("Nummer wählen:\n" 
+                "0-[Zurück]:\n"))
+
+                if nummer == 0:
+                    break
+
                 rezept = service.rezept_nach_index(rezepte, nummer)
 
                 if rezept is None:
@@ -48,8 +66,8 @@ def rezepte_ansehen_nach_gang():
 
 def rezepte_ansehen_nach_zutaten():
     while True:
-        zutat = [z.strip() for z in input("Welche Zutat(en) möchten Sie wählen?\nBitte Zutaten mit , trennen.\n" \
-        "geben sie [0] ein um zurück zur Filterauswahl zu gelangen:\n").strip().lower().split(",")]
+        zutat = [z.strip() for z in input("Welche Zutat(en) möchten Sie wählen?\nBitte Zutaten mit  \",\"  trennen.\n\n" 
+        "0-[Zurück]\n").strip().lower().split(",")]
 
         if zutat == ["0"]:
             return
@@ -135,7 +153,7 @@ def rezepte_ansehen():
 
 def rezept_einfuegen():
     rezeptname = input("Wie heißt das Rezept?" \
-    "geben sie 0 ein um zurück zum Menü zu gelangen:\n").strip()
+    "0-[Zurück]:\n").strip()
 
     if rezeptname == "0":
         return
@@ -164,10 +182,10 @@ def rezept_loeschen():
         while True:
             try:
                 gerichte = service.alle_rezepte()
-                nummer = int(input("Welche Nummer soll gelöscht werden?"
-                "geben sie 0 ein um zurück zum Menü zu gelangen:\n"))
+                nummer = int(input("Welche Nummer soll gelöscht werden?\n"
+                "0-[Zurück]:\n"))
 
-                if nummer == "0":
+                if nummer == 0:
                     break
 
                 if nummer > len(service.alle_rezepte()):  
