@@ -1,13 +1,8 @@
 import rezeptliste_model as model
 import rezeptliste_storage as storage
-
 ######## BASISZUGRIFF - LESEN
 
-def alle_rezeptnamen():
-    return[
-        rezepte.name for rezepte in storage.Gerichte
-    ]
-  
+ 
 def alle_rezepte():                                               
     return storage.Gerichte
 
@@ -40,7 +35,7 @@ def gang_validieren(gerichte, gangeingabe):
    ohne any würde er dann nichts raus geben."""
     gang = gangeingabe.strip().lower()
     return any(
-        rezept.Gang.strip().lower() == gang
+        rezept.gang.strip().lower() == gang
         for rezept in gerichte
     )
 
@@ -79,7 +74,7 @@ def filter_rezepte_nach_zutaten(zutaten):
 
 ######## ÄNDERUNGEN
 
-def rezepterstellung(rezeptname, zutaten_strings, zubereitung, gang, notizen=""):
+def rezepterstellung(rezeptname, zutaten_strings, zubereitung, gang, notizen):
     """In die Leere Zutatenliste kommen nachher die Objekte aus der Funktion.
         zs variable für Zutat als Text ( wie das 1. x in x for x in Gerichte )
         teile = zs.split() -> die Sachen werden durch leerzeichen gesplittet(also Name,menge,einheit)
@@ -118,10 +113,11 @@ def rezepterstellung(rezeptname, zutaten_strings, zubereitung, gang, notizen="")
         name=rezeptname,
         zutaten=Zutatenliste,
         zubereitung=zubereitung,
-        notizen="",
+        notizen=notizen,
         gang=gang.title()
     )
-    rezept_hinzufuegen(neues_rezept)
+    storage.Gerichte.append(neues_rezept)
+    storage.speichere_rezepte() 
     return neues_rezept
 
 def rezept_laden():
@@ -132,29 +128,3 @@ def rezept_loeschen(rezeptwahl):
     entfernten Gericht wird gespeichert"""
     storage.Gerichte.remove(rezeptwahl)
     storage.speichere_rezepte()
-
-def rezept_hinzufuegen(rezept):
-    storage.Gerichte.append(rezept)
-    storage.speichere_rezepte() 
-
-def rezept_einfuegen(Rezeptname,Rezeptzutaten,Rezeptzubereitung,Rezeptgang,Rezeptnotizen = " "):
-    """ Die Zutatenliste Line ist damit die Zutaten für die Zutatenliste als einzelne Elemente eingefügt werden
-und nicht alle Zutaten zusammen als ein langer String gelten statt eine Liste mit einzelnen Zutaten.
-
-leeres neues rezept wird generiert und mit den Daten aus der UI
-    gefüllt > neues Rezept AAAABER es ist noch nicht in der Gerichte Liste.
-    das geschieht erst durch die Funktion rezept_hinzufuegen. Dann wird in die Liste Gerichte appended."""
-    Zutatenliste = [z.strip() for z in Rezeptzutaten.split(",")]
-
-    
-    # Neues Rezept machen
-    neues_rezept = model.Rezept(
-        name=Rezeptname,
-        zutaten=Zutatenliste,
-        zubereitung=Rezeptzubereitung,
-        notizen=Rezeptnotizen,
-        gang=Rezeptgang.title()
-    )
-
-    
-    return neues_rezept

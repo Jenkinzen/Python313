@@ -1,5 +1,4 @@
 import rezeptliste_services as service
-import rezeptliste_model as model
 neustart = True
 
 def eingabezahl_pruefen(prompt,min_value=None,max_value=None):
@@ -21,6 +20,7 @@ def eingabezahl_pruefen(prompt,min_value=None,max_value=None):
             continue
 
         return value
+
 
 
 def filter_auswaehlen():
@@ -125,10 +125,11 @@ def rezepte_ansehen_nach_zutaten():
             
 def rezepte_ansehen_nach_Gericht():
     while True:
-        for i, rezept in enumerate(service.alle_rezeptnamen(), start=1):
-            print(f"{i}. {rezept}")
+        print()
+        for i, rezept in enumerate(service.alle_rezepte(), start=1):
+            print(f"{i}. {rezept.name}")
         gerichte = service.filter_rezepte_nach_gericht("")
-        nummer = eingabezahl_pruefen("Wählen sie bitte die Nummer des Gerichtes,\n"
+        nummer = eingabezahl_pruefen("\nWählen sie bitte die Nummer des Gerichtes,\n"
         "geben sie 0 ein um zurück zur Kriterienauswahl zu gelangen:\n",min_value=0,max_value=len(gerichte))
 
         if nummer == 0:
@@ -196,55 +197,53 @@ def rezept_einfuegen():
     return
 
 def rezept_loeschen():
-        for i, rezept in enumerate(service.alle_rezeptnamen(), start=1):
-            print(f"{i}. {rezept}")
+        for i, rezept in enumerate(service.alle_rezepte(), start=1):
+            print(f"{i}. {rezept.name}")
         
         while True:
-            try:
-                gerichte = service.alle_rezepte()
-                nummer = eingabezahl_pruefen("Welche Nummer soll gelöscht werden?\n"
-                "0-[Zurück]:\n")
+            
+            gerichte = service.alle_rezepte()
+            nummer = eingabezahl_pruefen("Welche Nummer soll gelöscht werden?\n"
+            "0-[Zurück]:\n",min_value=0,max_value=len(gerichte))                # len(alle_rezepte())würde auch gehen aber so ist es effizienter und logischer wenn
+                                                                                # schon durch gerichte einmal die funktion aufgerufen wurde.
+            if nummer == 0:
+                break
+            
+            rezept_zum_loeschen = service.rezept_nach_index(gerichte,nummer)
 
-                if nummer == 0:
-                    break
+            if rezept_zum_loeschen is None:
+                print("Rezept nicht gefunden.")
+                return
 
-                if nummer > len(service.alle_rezepte()):  
-                # eigentlich wäre es klüger len(gerichte) zu nutzen weil sonst alle_rezepte 2 mal aufgerufen wird aber für jetzt
-                # ist es für mich ein beispiel der Möglichkeiten und für meine Noob-Coder Augen verständlicher herauszulesen.               
-                    print("Ungültige Auswahl!")                             
-                    continue
+            for zeile in rezept_zum_loeschen.anzeigen():
+                print(zeile)
                 
-                rezept_zum_loeschen = service.rezept_nach_index(gerichte,nummer)
+            rueckversichern = input(f"Sind sie sicher, dass {rezept_zum_loeschen.name} gelöscht werden soll? Ja/Nein").strip().lower()
 
-                if rezept_zum_loeschen is None:
-                    print("Rezept nicht gefunden.")
+            if rueckversichern.strip().lower() == "ja":
+                    service.rezept_loeschen(rezept_zum_loeschen)
+                    print(f"{rezept_zum_loeschen} wurde gelöscht!")
                     return
+            
+            else:
+                print(f"{rezept_zum_loeschen} wird nicht gelöscht.")
+                break
 
-                for zeile in rezept_zum_loeschen.anzeigen():
-                    print(zeile)
-                    
-                rueckversichern = input(f"Sind sie sicher, dass {rezept_zum_loeschen.name} gelöscht werden soll? Ja/Nein").strip().lower()
 
-                if rueckversichern.strip().lower() == "ja":
-                        service.rezept_loeschen(rezept_zum_loeschen)
-                        print(f"{rezept_zum_loeschen} wurde gelöscht!")
-                        return
-                
-                else:
-                    print(f"{rezept_zum_loeschen} wird nicht gelöscht.")
-                    break
 
-            except ValueError:
-                print("Ungültig!")
 
 service.rezept_laden()
+# Vor dem Programm ausführen um die aktuellste Rezeptliste aus JSON geladen zu haben.
+
+
 
 while neustart:
 
-    Menueauswahl = input("""Möchten sie ein Rezept \n"
-1-[ansehen],
-2-[einfügen],
-3-[löschen]"?\n:""")
+    Menueauswahl = input("""Möchten sie ein Rezept \n
+1-[ansehen]
+2-[einfügen]
+3-[löschen]\n
+Eingabe:""")
 
 
 
