@@ -1,11 +1,16 @@
 import json
 from pathlib import Path
 from typing import List
-from rezeptliste_model import Rezept, Zutaten
+from Rezeptprogramm import rezeptliste_model as model
 
-DATEI = Path("rezepte.json")
-
-Gerichte: List[Rezept] = []
+DATEI = Path(__file__).resolve().parent / "rezepte.json"
+# __file__ sagt : der Dateipfad von dieser Datei, also Ordner:C:// ........ Rezeptprogramm| 
+# .resolve() macht einen absoluten Pfad
+# .parent ist der Ordner in dem diese Datei liegt
+# "rezepte.json" hängt den Dateinamen an den Pfad des Ordners
+# alles zusammen -> egal von wo, wenn auf die "rezepte.json" Datei zugegriffen wird ist es IMMER(resolve) die json Datei die im Ordner 
+# liegt in der auch diese Datei ist. 
+Gerichte: List[model.Rezept] = []
 
 
 
@@ -27,7 +32,7 @@ def lade_rezepte():
 
     for r in daten:
         zutaten = [
-            Zutaten(
+            model.Zutaten(
                 z["name"],
                 z.get("menge"),
                 z.get("einheit")
@@ -35,7 +40,7 @@ def lade_rezepte():
             for z in r.get("zutaten", [])
         ]
 
-        rezept = Rezept(
+        rezept = model.Rezept(
             name=r["name"],
             zutaten=zutaten,
             zubereitung=r["zubereitung"],
@@ -68,12 +73,12 @@ def speichere_rezepte():
         json.dump(daten, f, indent=2, ensure_ascii=False)
 
 
-def rezept_hinzufuegen(rezept: Rezept):
+def rezept_hinzufuegen(rezept: model.Rezept):
     global Gerichte
     Gerichte.append(rezept)
     speichere_rezepte()
 
-def rezept_loeschen(rezept: Rezept):
+def rezept_loeschen(rezept: model.Rezept):
     global Gerichte
     Gerichte.remove(rezept)
     speichere_rezepte()

@@ -1,3 +1,8 @@
+#cmd für test_services = powershell -ExecutionPolicy Bypass -File .\run_tests.ps1
+# warum auch immer funktionierts jetzt doch mit "pytest -q" anstatt dem Zauberspruch hier drüber.
+
+
+
 ########Redo/Undo
 """
 Undo : Ctrl + Z 

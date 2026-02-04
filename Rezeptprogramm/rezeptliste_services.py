@@ -1,5 +1,5 @@
-import rezeptliste_model as model
-import rezeptliste_storage as storage
+from Rezeptprogramm import rezeptliste_model as model
+from Rezeptprogramm import rezeptliste_storage as storage
 ######## BASISZUGRIFF - LESEN
 
  

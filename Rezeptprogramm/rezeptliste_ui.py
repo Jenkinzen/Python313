@@ -1,4 +1,4 @@
-import rezeptliste_services as service
+from Rezeptprogramm import rezeptliste_services as service
 neustart = True
 
 def eingabezahl_pruefen(prompt,min_value=None,max_value=None):
